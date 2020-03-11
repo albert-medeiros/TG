@@ -1,42 +1,96 @@
 #include<stdlib.h>
 #include<stdio.h>
+#include<string.h>
+
+#include avl.h
 
 #define tam 51
 
-void inicializaGrafos(){
+typedef struct usuario{ // Dados dos alunos
+	char nome[20];
+	int idade;
+	
+}TipoAluno;
 
+void inicializaGrafos(usuario matrizUsuarios[tam][tam]){ 
+/*
+i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
+ii. não é necessário oferecer essa opção ao usuário; 
+iii. poderão ser utilizados os índices da lista de 1 a n
+*/
+
+	printf("\n\n\t -> Inicializando o Grafo: \n");
+	for(int i=0; i<tam;i++){
+		for(int j=0; j<tam;j++){
+			//printf("%d\n");
+			matrizUsuarios[i][j].idade = 0;
+			strcpy(matrizUsuarios[i][j].nome, "");
+		}
+	}
 }
 
 void inserirUsuario(){
+/*
+i. libera, dinamicamente, uma linha e uma coluna da matriz de pesos para representar as relações do novo usuário, aloca uma posição de memória em cada uma das listas e realiza a inserção de tal usuário pelo nome (que será fornecido); 
+ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, retornar uma mensagem de erro.
+*/
 
 }
 
 void inserirRelacao(){
+/*
+i. insere uma relação de “é seguidor de/seguido por” entre um par de usuários;
+ii. nessa operação de inserção, os usuários deverão estar previamente inseridos na rede; 
+iii. deverão ser listados os nomes dos usuários da rede social para que o usuário do programa se guie na escolha; 
+iv. a inserção da relação é concluída após a inclusão simultânea das informações nas três estruturas representativas; 
+v. caso a relação já esteja inserida, deve-se oferecer a opção de atualizar a o período de tempo associado entre os dois usuários selecionados;
+vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma nova relação, é necessário verificar se as AVLs que representam 
+	os usuários foram desbalanceadas e, caso positivo, realizar as operações de rotacionamento de vértices (nós). ? Revise os algoritmos de rotacionamento de árvores AVL e utilize os algoritmos já implementados em outras atividades.
+*/
 
 }
 
 void listarSeguidores(){
+/*
+i.após o usuário do programa escolher um usuário cadastrado x, esta opção deverá listar todos os usuários os quais x segue e por quais usuários x é seguido, inclusive com os tempos relacionados à cada relação existente; 
+ii. no caso da representação por lista com adjacências em AVL, fornecer ao usuário a opção de se utilizar algum dos algoritmos de percurso em árvores in-ordem, pré-ordem ou pós-ordem.
+*/
+
 
 }
 
 void listarSeguidoresVelhos(){
+//i. lista todos os usuários que são seguidos por usuários mais velhos, inclusive com os quantitativos associados a cada um deles.
+
 
 }
 
 void atualizarRelacao(){
+//i. ocorre similarmente à inserção de relações, porém a relação deverá estar previamente inserida. ii. caso a relação não esteja inserida deve-se oferecer essa opção ao usuário do programa.
 
 }
 
 void removerUsuario(){
-
+/* 
+i. remove um usuário previamente cadastrado na rede social, inclusive, com todas as suas relações; 
+ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
+*/
 }
 
 void removerRelacao(){
+/*
+i. remove uma relação previamente cadastrada na rede social; 
+ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja inserido, exibir uma mensagem de erro.
+*/	
+
 
 }
 
 
 main(){
 	
-	
+	printf("\n\n\t  - - - - Programa iniciado - - - -\n\n");
+	usuario matrizUsuarios[tam][tam];
+	inicializaGrafos(matrizUsuarios, );
+		
 }
