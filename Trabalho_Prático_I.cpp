@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<string.h>
 
-#include avl.h
+//#include "avl.h"
 
 #define tam 51
 
@@ -12,7 +12,26 @@ typedef struct usuario{ // Dados dos alunos
 	
 }TipoAluno;
 
-void inicializaGrafos(usuario matrizUsuarios[tam][tam]){ 
+void leArquivo(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){
+	int i=1;
+	FILE *entrada = fopen("arquivo.txt", "r"); //abertura do arquivo 
+				
+	if(entrada == NULL){
+		printf("\t  -> Erro na abertura do arquivo");
+		system("pause");
+	}
+	
+	
+	while(!feof(entrada)){
+		printf("%d\t",i);		
+		fscanf(entrada, "%s\n",&vetorUsuarios[i].nome); //lê os dados do arquivo
+		fscanf(entrada, "%d\n",&vetorUsuarios[i].idade); //lê os dados do arquivo
+		i++;
+	}
+	
+}
+
+void inicializaGrafos(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){ 
 /*
 i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
 ii. não é necessário oferecer essa opção ao usuário; 
@@ -26,6 +45,12 @@ iii. poderão ser utilizados os índices da lista de 1 a n
 			matrizUsuarios[i][j].idade = 0;
 			strcpy(matrizUsuarios[i][j].nome, "");
 		}
+	}
+	
+	for(int i=0; i<tam;i++){
+			//printf("%d\n");
+			vetorUsuarios[i].idade = 0;
+			strcpy(vetorUsuarios[i].nome, "");
 	}
 }
 
@@ -90,7 +115,7 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 main(){
 	
 	printf("\n\n\t  - - - - Programa iniciado - - - -\n\n");
-	usuario matrizUsuarios[tam][tam];
-	inicializaGrafos(matrizUsuarios, );
-		
+	usuario matrizUsuarios[tam][tam];usuario vetorUsuarios[tam];
+	inicializaGrafos(vetorUsuarios, matrizUsuarios);
+	leArquivo(vetorUsuarios, matrizUsuarios);		
 }
