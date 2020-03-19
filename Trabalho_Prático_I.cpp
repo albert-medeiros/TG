@@ -6,6 +6,9 @@
 
 #define tam 51
 
+//variavel global para contagem de linha da matriz de pesos
+int qntCadastros=1;
+
 typedef struct usuario{ // Dados dos alunos
 	char nome[20];
 	int idade;
@@ -13,7 +16,9 @@ typedef struct usuario{ // Dados dos alunos
 }TipoAluno;
 
 void leArquivo(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){
-	int i=1;
+	
+	char nome[20];
+	
 	FILE *entrada = fopen("arquivo.txt", "r"); //abertura do arquivo 
 				
 	if(entrada == NULL){
@@ -23,10 +28,21 @@ void leArquivo(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){
 	
 	
 	while(!feof(entrada)){
-		printf("%d\t",i);		
-		fscanf(entrada, "%s\n",&vetorUsuarios[i].nome); //lê os dados do arquivo
-		fscanf(entrada, "%d\n",&vetorUsuarios[i].idade); //lê os dados do arquivo
-		i++;
+		fscanf(entrada, "%s\n",&nome); //lê os dados do arquivo
+		for(int j=1;j<qntCadastros;j++){
+			if(strcmp(vetorUsuarios[j].nome,nome) == 0){
+				printf("\n\t\t - - - Usuario ' %s ' ja foi inserido - - -\n\n",nome);
+				system("pause");
+			}
+			
+		}
+		
+		
+		strcpy(vetorUsuarios[qntCadastros].nome,nome);
+		fscanf(entrada, "%d\n",&vetorUsuarios[qntCadastros].idade); //lê os dados do arquivo
+		printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);
+		qntCadastros++;
+		
 	}
 	
 }
