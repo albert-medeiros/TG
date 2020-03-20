@@ -15,7 +15,34 @@ typedef struct usuario{ // Dados dos alunos
 	
 }TipoAluno;
 
-void leArquivo(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){
+void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){ 
+/*
+i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
+ii. não é necessário oferecer essa opção ao usuário; 
+iii. poderão ser utilizados os índices da lista de 1 a n
+*/
+
+	printf("\n\n\t -> Inicializando o Grafo: \n");
+	for(int i=0; i<=tam;i++){
+		for(int j=0; j<tam;j++){
+			//printf("%d\n");
+			matrizUsuarios[i][j] = 0;
+		}
+	}
+	
+	for(int i=0; i<tam;i++){
+			//printf("%d\n");
+			vetorUsuarios[i].idade = 0;
+			strcpy(vetorUsuarios[i].nome, "");
+	}
+}
+
+void inserirUsuario(usuario vetorUsuarios[tam]){
+
+/*
+i. libera, dinamicamente, uma linha e uma coluna da matriz de pesos para representar as relações do novo usuário, aloca uma posição de memória em cada uma das listas e realiza a inserção de tal usuário pelo nome (que será fornecido); 
+ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, retornar uma mensagem de erro.
+*/
 	
 	char nome[20];
 	
@@ -29,7 +56,7 @@ void leArquivo(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){
 	
 	while(!feof(entrada)){
 		fscanf(entrada, "%s\n",&nome); //lê os dados do arquivo
-		for(int j=1;j<qntCadastros;j++){
+		for(int j=1;j<=qntCadastros;j++){
 			if(strcmp(vetorUsuarios[j].nome,nome) == 0){
 				printf("\n\t\t - - - Usuario ' %s ' ja foi inserido - - -\n\n",nome);
 				system("pause");
@@ -42,43 +69,11 @@ void leArquivo(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){
 		fscanf(entrada, "%d\n",&vetorUsuarios[qntCadastros].idade); //lê os dados do arquivo
 		printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);
 		qntCadastros++;
-		
 	}
 	
 }
 
-void inicializaGrafos(usuario vetorUsuarios[tam], usuario matrizUsuarios[tam][tam]){ 
-/*
-i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
-ii. não é necessário oferecer essa opção ao usuário; 
-iii. poderão ser utilizados os índices da lista de 1 a n
-*/
-
-	printf("\n\n\t -> Inicializando o Grafo: \n");
-	for(int i=0; i<tam;i++){
-		for(int j=0; j<tam;j++){
-			//printf("%d\n");
-			matrizUsuarios[i][j].idade = 0;
-			strcpy(matrizUsuarios[i][j].nome, "");
-		}
-	}
-	
-	for(int i=0; i<tam;i++){
-			//printf("%d\n");
-			vetorUsuarios[i].idade = 0;
-			strcpy(vetorUsuarios[i].nome, "");
-	}
-}
-
-void inserirUsuario(){
-/*
-i. libera, dinamicamente, uma linha e uma coluna da matriz de pesos para representar as relações do novo usuário, aloca uma posição de memória em cada uma das listas e realiza a inserção de tal usuário pelo nome (que será fornecido); 
-ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, retornar uma mensagem de erro.
-*/
-
-}
-
-void inserirRelacao(){
+void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){
 /*
 i. insere uma relação de “é seguidor de/seguido por” entre um par de usuários;
 ii. nessa operação de inserção, os usuários deverão estar previamente inseridos na rede; 
@@ -86,8 +81,68 @@ iii. deverão ser listados os nomes dos usuários da rede social para que o usuári
 iv. a inserção da relação é concluída após a inclusão simultânea das informações nas três estruturas representativas; 
 v. caso a relação já esteja inserida, deve-se oferecer a opção de atualizar a o período de tempo associado entre os dois usuários selecionados;
 vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma nova relação, é necessário verificar se as AVLs que representam 
-	os usuários foram desbalanceadas e, caso positivo, realizar as operações de rotacionamento de vértices (nós). ? Revise os algoritmos de rotacionamento de árvores AVL e utilize os algoritmos já implementados em outras atividades.
+	os usuários foram desbalanceadas e, caso positivo, realizar as operações de rotacionamento de vértices (nós). ? Revise os algoritmos de rotacionamento
+	de árvores AVL e utilize os algoritmos já implementados em outras atividades.
 */
+
+
+	char nomeSeguido[20], nomeSeguidor[20];
+	int coluna=0, linha=0,cont=0;
+	FILE *seguir = fopen("seguir.txt", "r"); //abertura do arquivo	
+	if(seguir == NULL){
+		printf("\t  -> Erro na abertura do arquivo");
+		system("pause");
+	}
+	
+	while(!feof(seguir)){
+		fscanf(seguir, "%s\n",&nomeSeguidor); //lê os dados do arquivo
+		fscanf(seguir, "%s\n",&nomeSeguido); //lê os dados do arquivo
+		
+		printf("\n\n--> %s segue %s\n", nomeSeguidor, nomeSeguido);
+		
+		
+		for(int i=1;i<qntCadastros;i++){
+			if(strcmp(vetorUsuarios[i].nome,nomeSeguidor) == 0){
+				linha = i;				
+				cont++;
+				if(cont == 2){
+					break;
+				}
+			}
+			
+			if(strcmp(vetorUsuarios[i].nome,nomeSeguido) == 0){
+				coluna = i;
+				
+				cont++;
+				if(cont == 2){
+					break;
+				}
+			}
+		}
+		if(cont != 2){
+			printf("\n\t - somente um usuário encontrado - ");
+		}
+	
+		
+		printf("linha %d - Coluna %d\n",linha,coluna);
+		matrizUsuarios[linha][coluna] = 1;
+		
+		
+		// Printar a matriz de pesos
+//		for(int i=1;i<qntCadastros;i++){
+//			for(int j=1;j<qntCadastros;j++){
+//				printf("[ %d ]", matrizUsuarios[i][j]);
+//			}
+//			printf("\n");
+//		}
+//		
+		
+		
+		
+	}
+	
+	
+	
 
 }
 
@@ -131,7 +186,18 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 main(){
 	
 	printf("\n\n\t  - - - - Programa iniciado - - - -\n\n");
-	usuario matrizUsuarios[tam][tam];usuario vetorUsuarios[tam];
+	int matrizUsuarios[tam][tam];
+	usuario vetorUsuarios[tam];
 	inicializaGrafos(vetorUsuarios, matrizUsuarios);
-	leArquivo(vetorUsuarios, matrizUsuarios);		
+	
+	inserirUsuario(vetorUsuarios);
+	
+	printf("\n\n\t  - - - - %d usuarios cadastrados - - - -\n\n", qntCadastros);
+	
+	
+	inserirRelacao(vetorUsuarios, matrizUsuarios);
+	printf("\n\n");
+	printf("           -      FIM             -");
+	
+	
 }
