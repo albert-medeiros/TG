@@ -137,20 +137,33 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 //		}
 //		
 		
-		
-		
+	
+		cont=0;	
 	}
-	
-	
-	
-
 }
 
-void listarSeguidores(){
+void listarSeguidores(int existe, char nomeListaseguidores[20], usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam]){
 /*
-i.após o usuário do programa escolher um usuário cadastrado x, esta opção deverá listar todos os usuários os quais x segue e por quais usuários x é seguido, inclusive com os tempos relacionados à cada relação existente; 
-ii. no caso da representação por lista com adjacências em AVL, fornecer ao usuário a opção de se utilizar algum dos algoritmos de percurso em árvores in-ordem, pré-ordem ou pós-ordem.
+i.após o usuário do programa escolher um usuário cadastrado x, esta opção deverá listar todos os usuários os quais x segue e por quais usuários x é seguido,
+  inclusive com os tempos relacionados à cada relação existente; 
+ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuário a opção de se utilizar algum dos algoritmos de percurso em árvores in-ordem,
+   pré-ordem ou pós-ordem.
 */
+	
+	printf("\nO usuario Segue:\n");
+	for(int i=1;i<qntCadastros;i++){
+		if(matrizUsuarios[existe][i] == 1){
+			printf("\t\t%s\n", vetorUsuarios[i].nome);
+		}
+	}
+	
+	printf("\nO usuario eh seguido:\n");
+	for(int i=1;i<qntCadastros;i++){
+		if(matrizUsuarios[i][existe] == 1){
+			printf("\t\t%s\n", vetorUsuarios[i].nome);
+		}
+	}
+
 
 
 }
@@ -186,7 +199,8 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 main(){
 	
 	printf("\n\n\t  - - - - Programa iniciado - - - -\n\n");
-	int matrizUsuarios[tam][tam];
+	int matrizUsuarios[tam][tam],opcListausuarios,vzs=10,existe=0;
+	char nomeListaseguidores[20];
 	usuario vetorUsuarios[tam];
 	inicializaGrafos(vetorUsuarios, matrizUsuarios);
 	
@@ -194,10 +208,40 @@ main(){
 	
 	printf("\n\n\t  - - - - %d usuarios cadastrados - - - -\n\n", qntCadastros);
 	
-	
 	inserirRelacao(vetorUsuarios, matrizUsuarios);
-	printf("\n\n");
-	printf("           -      FIM             -");
 	
-	
+	printf("\n\nVoce deseja listar os usuarios? 1-sim 2-nao\n");
+	scanf("%d",&opcListausuarios); printf("\n\n");
+
+	vzs=10;
+	if(opcListausuarios == 1){
+		for(int i=1;i<qntCadastros;i++){
+			printf("%s ",vetorUsuarios[i].nome);
+			if(i==vzs){
+				printf("\n");
+				vzs= vzs+10;
+			}
+			else{
+				printf("- ");
+			}
+		}
+		
+		A:
+		printf("\n\nDigite o nome a ser listado: ");
+		scanf("%s", &nomeListaseguidores);
+		for(int i=1;i<qntCadastros;i++){
+			if(strcmp(nomeListaseguidores, vetorUsuarios[i].nome)==0){
+				existe=i;
+			}
+		}
+		
+		if(existe == 0){
+			printf("O nome digitado nao esta cadastrado, Digite novamente:\n");
+			goto A;
+		}
+		
+		listarSeguidores(existe, nomeListaseguidores,vetorUsuarios,matrizUsuarios);
+		   
+	}
+	printf("\n\n\t\t-\tFIM\t-");
 }
