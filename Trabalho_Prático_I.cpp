@@ -278,7 +278,6 @@ main(){
 			}	
 		}
 		
-		
 		listarSeguidores(existe, nomeListaseguidores,vetorUsuarios,matrizUsuarios,modo);	   
 	}
 //--------------------------------------------------------------------------------------------
