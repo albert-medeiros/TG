@@ -1,8 +1,12 @@
 /* Os usuáriarios são inseridos atraves de um arquivo externo de forma que o conteudo seja disposto em uma linha o nome do usuario e na ligua em seguida a idade, na proxima
    nome do Proximo usuario e assim por diante 
    
-   Ja a sequencia de seguidores tbm são atribuidas atraves de um arquivo externo tambem com as informacoes separadas por linha, na qual, a primeira ligua o seguidor e na de baixo o seguido e assim por diante
-*/
+   Ja a sequencia de seguidores tbm são atribuidas atraves de um arquivo externo tambem com as informacoes separadas por linha, na qual, a primeira ligua o seguidor e na de baixo o seguido e assim por diante 
+   
+   linha = quem segue
+   coluna = quem eh seguido
+   
+   */
 
 #include<stdlib.h>
 #include<stdio.h>
@@ -134,16 +138,13 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 		matrizUsuarios[linha][coluna] = 1;
 		
 		
-		// Printar a matriz de pesos
+//		Printar a matriz de pesos
 //		for(int i=1;i<qntCadastros;i++){
 //			for(int j=1;j<qntCadastros;j++){
 //				printf("[ %d ]", matrizUsuarios[i][j]);
 //			}
 //			printf("\n");
-//		}
-//		
-		
-	
+//		}	
 		cont=0;	
 	}
 }
@@ -164,17 +165,26 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 			for(int i=1;i<qntCadastros;i++){ //percorre toda a linha da matriz mostrando todos os usuarios que sao seguidos por esse usuário
 				if(matrizUsuarios[existe][i] == 1){
 					printf("\t\t\t %s\n", vetorUsuarios[i].nome);
-					segue=1;
+					segue=1; //se ele nao seguir não entra no if logo abaixo 
 				}
+			}
+			if(segue == 0){
+				printf("\t\t\t O usuario nao segue ninguem!\n");
 			}
 			
 			printf("\n\tO usuario eh seguido:\n");
 			for(int i=1;i<qntCadastros;i++){ //percorre toda a coluna da matriz mostrando todos os usuarios que estão seguindo esse usuário
 				if(matrizUsuarios[i][existe] == 1){
 					printf("\t\t\t %s\n", vetorUsuarios[i].nome);
-					eSeguido=1;
+					eSeguido=1; //se alguem seguir nao entra no if logo abaixo 
 				}
 			}
+			
+			if(eSeguido == 0){
+				printf("\t\t\t O usuario nao eh seguido por ninguem!\n");
+			}
+			
+			
 			printf(" -------------------- Matriz de Pesos ----------------------- ");
 		break;
 		
@@ -192,8 +202,33 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 	}
 }
 
-void listarSeguidoresVelhos(){
+void listarSeguidoresVelhos(usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam]){
 //i. lista todos os usuários que são seguidos por usuários mais velhos, inclusive com os quantitativos associados a cada um deles.
+	int segue=0,eSeguido=0,maisVelho=0,posMasisVelho=0;
+	
+	
+	printf("\n\n\n -------------------- Matriz de Pesos ----------------------- \n\n");
+	
+	for(int i=1;i<qntCadastros;i++){		
+		if(vetorUsuarios[i].idade > maisVelho){ //verifica se existe e salva a posicao no vetor que ele esta
+			maisVelho=vetorUsuarios[i].idade;
+			posMasisVelho=i;
+		}
+	}
+	
+	printf("\tO usuario mais velho eh o: %s com %d anos.\n Este usuario segue:\n", vetorUsuarios[posMasisVelho].nome, vetorUsuarios[posMasisVelho].idade);
+	for(int i=1;i<qntCadastros;i++){
+		if(matrizUsuarios[posMasisVelho][i] == 1){
+			printf("\t\t %s - %d anos\n", vetorUsuarios[i].nome, vetorUsuarios[i].idade);
+			segue=1; //se alguem seguir nao entra no if logo abaixo 
+		}
+	}
+	
+	if(segue == 0){
+			printf("-> ninguem :( <-");
+	}
+	
+	printf("\n\n -------------------- Matriz de Pesos ----------------------- \n\n");
 
 
 }
@@ -226,7 +261,7 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 main(){
 	
 	printf("\n\n\t  - - - - Programa iniciado - - - -\n\n");
-	int matrizUsuarios[tam][tam],opcListausuarios,vzs=10,existe=0,modo=0;
+	int matrizUsuarios[tam][tam],opcListausuarios,vzs=10,existe=0,modo=0,listaVelho=0;
 	char nomeListaseguidores[20];
 	usuario vetorUsuarios[tam];
 	inicializaGrafos(vetorUsuarios, matrizUsuarios);	
@@ -237,7 +272,7 @@ main(){
 	inserirRelacao(vetorUsuarios, matrizUsuarios);
 
 //--------------------------------- Listando os seguidores do usuário a ser escolhido -----------------------------------------------------------
-	printf("\n\nVoce deseja listar os usuarios? 1-sim 2-nao\n");
+	printf("\n\nVoce deseja listar todos os usuarios? 1-sim 2-nao\n");
 	scanf("%d",&opcListausuarios); printf("\n\n\t");
 
 	vzs=10; //Pra quando houver mais de x usuarios cadastrados, esse número ser usado como base para quebraa de linha no for a abaixo
@@ -280,8 +315,13 @@ main(){
 		
 		listarSeguidores(existe, nomeListaseguidores,vetorUsuarios,matrizUsuarios,modo);	   
 	}
-//--------------------------------------------------------------------------------------------
-
+//---------------------------------- Listando os seguidores do usuário a ser escolhido -----------------------------------------------------------
+	printf("\n\nDeseja mostrar quem o usuario mais velho segue? 1-sim 2-nao\n");
+	scanf("%d",&listaVelho);
+	if(listaVelho == 1){
+		listarSeguidoresVelhos(vetorUsuarios,matrizUsuarios);	
+	}
+	
 
 	printf("\n\n\t\t-\tFIM\t-");
 }
