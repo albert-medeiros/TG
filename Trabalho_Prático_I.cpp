@@ -241,11 +241,37 @@ ii. caso a relação não esteja inserida deve-se oferecer essa opção ao usuário do
 
 }
 
-void removerUsuario(){
+void removerUsuario(int existe, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){
 /* 
 i. remove um usuário previamente cadastrado na rede social, inclusive, com todas as suas relações; 
 ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 */
+	
+	int confirmacao=0,vzs;
+	char aux[20];
+	
+	printf("\n\t VOCE REALMENTE DESEJA REMOVER O USUARIO %s DA REDE? 1-sim 2-nao\n", vetorUsuarios[existe].nome);
+	scanf("%d", &confirmacao);
+	
+	if(confirmacao == 1){	
+		strcpy(aux,vetorUsuarios[existe].nome);
+
+//---------------------------- Removendo do vetor ------------------	
+		for(int i=existe;i<qntCadastros;i++){
+			vetorUsuarios[i] = vetorUsuarios[i+1];
+		}
+		
+//---------------------------- Removendo do vetor ------------------
+
+//---------------------------- Removendo da matriz ------------------		
+		for(int i=1;i<qntCadastros;i++){
+			matrizUsuarios[existe][i] = matrizUsuarios[existe][i+1];
+			matrizUsuarios[i][existe] = matrizUsuarios[i+1][existe];
+		}
+//---------------------------- Removendo da matriz ------------------		
+		qntCadastros--;
+	}
+
 }
 
 void removerRelacao(){
@@ -261,7 +287,8 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 main(){
 	
 	printf("\n\n\t  - - - - Programa iniciado - - - -\n\n");
-	int matrizUsuarios[tam][tam],opcListausuarios,vzs=10,existe=0,modo=0,listaVelho=0;
+	int matrizUsuarios[tam][tam],opcListausuarios,vzs=10,existe=0,modo=0,listaVelho=0,opcRemover=0;
+	int remover=0;
 	char nomeListaseguidores[20];
 	usuario vetorUsuarios[tam];
 	inicializaGrafos(vetorUsuarios, matrizUsuarios);	
@@ -272,7 +299,7 @@ main(){
 	inserirRelacao(vetorUsuarios, matrizUsuarios);
 
 //--------------------------------- Listando os seguidores do usuário a ser escolhido -----------------------------------------------------------
-	printf("\n\nVoce deseja listar todos os usuarios? 1-sim 2-nao\n");
+	printf("\n\nVoce deseja listar todos os usuarios e em sequencia os seguidores de algum? 1-sim 2-nao\n");
 	scanf("%d",&opcListausuarios); printf("\n\n\t");
 
 	vzs=10; //Pra quando houver mais de x usuarios cadastrados, esse número ser usado como base para quebraa de linha no for a abaixo
@@ -298,7 +325,7 @@ main(){
 		}
 		
 		if(existe == 0){
-			printf("O nome digitado nao esta cadastrado. Digite novamente!\n");
+			printf("O nome digitado nao esta cadastrado na rede. Digite novamente!\n");
 			system("pause");
 			goto A;
 		}
@@ -315,13 +342,65 @@ main(){
 		
 		listarSeguidores(existe, nomeListaseguidores,vetorUsuarios,matrizUsuarios,modo);	   
 	}
+
 //---------------------------------- Listando os seguidores do usuário a ser escolhido -----------------------------------------------------------
+
+
+//---------------------------------- Listando quem o usuario mais velho segue -----------------------------------------------------------
+	
 	printf("\n\nDeseja mostrar quem o usuario mais velho segue? 1-sim 2-nao\n");
 	scanf("%d",&listaVelho);
 	if(listaVelho == 1){
 		listarSeguidoresVelhos(vetorUsuarios,matrizUsuarios);	
 	}
 	
+//---------------------------------- Listando quem o usuario mais velho segue -----------------------------------------------------------
 
+//---------------------------------- removendo um usuário -----------------------------------------------------------
+	printf("\n\n\nDeseja remover um usuario? 1-sim 2-nao\n");
+	scanf("%d",&remover);
+	
+	if(remover==1){
+		
+		printf("\n\n\t\t\t\t\t- Todos usuarios -\n\t");
+	
+		vzs=10;
+		for(int i=1;i<qntCadastros;i++){ //printa os usuários cadastrados
+			printf("%s ",vetorUsuarios[i].nome);
+			if(i==vzs){ //saber a hora de dar quebra de linha na mostra de usuarios
+				printf("\n\t");
+				vzs= vzs+10;
+			}
+			else{ //nao printar o "-" na depois do ultimo valor antes da quebra de linha
+				printf("- ");
+			}
+		}	
+	
+		existe = 0;
+		
+		
+		while(existe==0){
+			printf("\n\nDigite o nome a ser removido: ");
+			scanf("%s", &nomeListaseguidores);
+			for(int i=1;i<qntCadastros;i++){
+				if(strcmp(nomeListaseguidores, vetorUsuarios[i].nome)==0){ //verifica se existe e salva a posicao no vetor que ele esta
+					existe=i;
+				}
+			}
+			
+			if(existe == 0){
+				printf("O nome digitado nao esta cadastrado na rede. Digite novamente!\n");
+				system("pause");
+			}	
+		}
+	
+		removerUsuario(existe,vetorUsuarios,matrizUsuarios);
+			
+	}
+
+	
+//---------------------------------- removendo um usuário -----------------------------------------------------------
+	
+	
 	printf("\n\n\t\t-\tFIM\t-");
 }
