@@ -12,18 +12,34 @@
 #include<stdio.h>
 #include<string.h>
 
-//#include "avl.h"
+#include "avl.h"
 
 #define tam 51
 
 //variavel global para contagem de linha da matriz de pesos
 int qntCadastros=1;
 
-typedef struct usuario{ // Dados dos alunos
+typedef struct usuario{ // Dados dos usuarios
 	char nome[20];
 	int idade;
 	
-}TipoAluno;
+}TipoUsuario;
+
+//----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
+typedef struct no{
+	struct no *esq,*dir; // aponta para o proximo no
+	TipoUsuario aluno; //chave real
+} TNo;
+
+void inicializa(TNo **ptr){ //CRIA A RAIZ
+	*ptr = NULL;
+}
+//----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
+
+
+
+
+
 
 void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){ 
 /*
