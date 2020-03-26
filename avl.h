@@ -1,3 +1,7 @@
+
+
+
+
 //----------------------------------------------------------------------- A V L ------------------------------------------------------------------------------------
 int altura(TNo *ptr){  
 	if (ptr == NULL){ //Caso não haja algum nó na árvore
@@ -38,7 +42,7 @@ void rotacaoEsq(TNo **ptr){
 	(*ptr) = q; //defino que q vai ser a nov raiz
 }
 
-void insereAVL(TNo **ptr, TipoAluno alu){
+void insereAVL(TNo **ptr, TipoUsuario alu){
 	int FB,fb;
 	
 	if (*ptr == NULL){ // entra na hora de criar um novo nó
