@@ -16,8 +16,10 @@
 
 #define tam 51
 
+#define ALOCA (TNo*)malloc(sizeof(TNo))
+
 //variavel global para contagem de linha da matriz de pesos
-int qntCadastros=1;
+int qntCadastros=1,flag = -1;
 
 
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
@@ -29,26 +31,68 @@ typedef struct usuario{ // Dados dos usuarios
 
 typedef struct no{
 	struct no *esq,*dir; // aponta para o proximo no
-	TipoUsuario aluno; //chave real
+	TipoUsuario user; //chave real
 } TNo;
 
-void inicializa(TNo **ptr){ //CRIA A RAIZ
-	*ptr = NULL;
-}
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
 
+int altura(TNo *ptr){  
+	if (ptr == NULL){ //Caso não haja algum nó na árvore
+		return -1; //return -1 - altura 
+	}
+	
+	else{
+		int he = altura(ptr->esq); //percorrer a esquerda
+		int hd = altura(ptr->dir); //percorrer a direita
+		if(he<hd){ 		//verifica qual das ramificações é maior
+			return hd+1;	//conta os níveis das ramificações da direita
+		}
+		else{
+			return he+1;	//conta os níveis das ramificações da esquerda
+		}
+	}
+}
+
+void rotacaoDir(TNo **ptr){
+	
+	TNo *q,*temp; //ponteiro
+	
+	q = (*ptr)->esq; //q vai receber a sub árvore a esquerda
+	temp = q->dir; //sub árvore a direita de q 
+	q->dir = (*ptr); //aponta pra raiz da sub árvore passada
+	(*ptr)->esq = temp; //a raiz vai apontar pra temp
+	(*ptr) = q; //defino que q vai ser a nov raiz
+	
+}
+
+void rotacaoEsq(TNo **ptr){
+	TNo *q,*temp; //ponteiro
+	
+	q = (*ptr)->dir; //q vai receber a sub árvore a direita
+	temp = q->esq; //sub árvore a ESQUERDA de q 
+	q->esq = (*ptr); //aponta pra raiz da sub árvore passada
+	(*ptr)->dir = temp; //a raiz vai apontar pra temp
+	(*ptr) = q; //defino que q vai ser a nov raiz
+}
 
 
 
 
 
-void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){ 
+
+
+
+
+
+
+void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr){ 
 /*
 i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
 ii. não é necessário oferecer essa opção ao usuário; 
 iii. poderão ser utilizados os índices da lista de 1 a n
 */
 
+//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
 	printf("\n\n\t -> Inicializando o Grafo: \n");
 	for(int i=0; i<=tam;i++){
 		for(int j=0; j<tam;j++){
@@ -62,15 +106,20 @@ iii. poderão ser utilizados os índices da lista de 1 a n
 			vetorUsuarios[i].idade = 0;
 			strcpy(vetorUsuarios[i].nome, "");
 	}
+//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
+	
+//-----------------------------------------------------------------------------------------------------------------> Arvore		
+	*ptr = NULL;
+//-----------------------------------------------------------------------------------------------------------------> Arvore	
 }
 
-void inserirUsuario(usuario vetorUsuarios[tam]){
+void inserirUsuario(usuario vetorUsuarios[tam],TNo **ptr, TipoUsuario user){
 
 /*
 i. libera, dinamicamente, uma linha e uma coluna da matriz de pesos para representar as relações do novo usuário, aloca uma posição de memória em cada uma das listas e realiza a inserção de tal usuário pelo nome (que será fornecido); 
 ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, retornar uma mensagem de erro.
 */
-	
+
 	char nome[20];
 	
 	FILE *entrada = fopen("arquivo.txt", "r"); //abertura do arquivo 
@@ -82,22 +131,89 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 	
 	
 	while(!feof(entrada)){
-		fscanf(entrada, "%s\n",&nome); //lê os dados do arquivo
-		for(int j=1;j<=qntCadastros;j++){
-			if(strcmp(vetorUsuarios[j].nome,nome) == 0){
-				printf("\n\t\t - - - Usuario ' %s ' ja foi inserido - - -\n\n",nome);
-				system("pause");
-				break;
-			}
+		
+		if(flag == -1){
+			fscanf(entrada, "%s\n",&nome); //lê os dados do arquivo
 			
+			//verifica se o usuário já foi inserido e caso já tenha sido inserido encerra-se a insercao
+			for(int j=1;j<=qntCadastros;j++){
+				if(strcmp(vetorUsuarios[j].nome,nome) == 0){
+					printf("\n\t\t - - - Usuario ' %s ' ja foi inserido - - -\n\n",nome);
+					system("pause");
+					break;
+				}
+				
+			}
+		
+//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
+		
+			strcpy(vetorUsuarios[qntCadastros].nome,nome);
+			fscanf(entrada, "%d\n",&vetorUsuarios[qntCadastros].idade); //lê os dados do arquivo
+			printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);
+			user = vetorUsuarios[qntCadastros];
+			flag =0;
+		}	
+		
+		
+//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
+
+//-----------------------------------------------------------------------------------------------------------------> Arvore
+
+		int FB,fb;
+	
+		if (*ptr == NULL){ // entra na hora de criar um novo nó
+			(*ptr) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
+			(*ptr)->esq = NULL;
+			(*ptr)->dir = NULL;
+			strcpy((*ptr)->user.nome, user.nome); // o nó recebe o valor do nome
+			(*ptr)->user = user; // o nó recebe os outros valores
 		}
 		
-//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
-		strcpy(vetorUsuarios[qntCadastros].nome,nome);
-		fscanf(entrada, "%d\n",&vetorUsuarios[qntCadastros].idade); //lê os dados do arquivo
-		printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);
+		else{
+//			if(alu.codigo<(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
+//				insereAVL(&(*ptr)->esq,alu); //passa o valor da esquerda se for menor
+//			}
+//			else if(alu.codigo>(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
+				inserirUsuario( vetorUsuarios[tam], &(*ptr)->dir, user); //passa o valor da direita se for maior
+//			}
+		}
+		
+		//FB - Pai;  
+		//fb - filho;
+		//Após inserir o valor é verifica do Fator de balanceamento
+		
+		FB=(altura((*ptr)->dir))-(altura((*ptr)->esq)); //calcula a altura ao desempilhar
+		
+		if(FB == +2){ //caso o FB do nó seja 2 então tem que fazer alteração 
+				
+			fb = altura((*ptr)->dir->dir)-altura((*ptr)->dir->esq); //calcula a altura do filho da direita
+			
+			if(fb==1){ // se for igual a um então rotação simples 
+				rotacaoEsq(ptr);
+			}
+				
+			else if(fb == -1){ // se for igual a menos um então rotação dulpa
+				rotacaoDir(&(*ptr)->dir);
+				rotacaoEsq(ptr);
+			}
+		}
+			
+		else if(FB == -2){
+			
+			fb = (altura((*ptr)->esq->dir))-(altura((*ptr)->esq->esq)); //calcula a altura do filho da direita
+			if(fb== -1){ // se for igual a um então rotação simples 
+				rotacaoDir(ptr);
+			}
+		
+			else if(fb== +1){ // se for igual a menos um então rotação dulpa
+				rotacaoEsq(&(*ptr)->esq);
+				rotacaoDir(ptr);
+			}	
+		}
+	
+//-----------------------------------------------------------------------------------------------------------------> Arvore
 		qntCadastros++;
-//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
+		flag = -1;
 	}
 	
 }
@@ -330,16 +446,23 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 
 }
 
-
+//----------------------------------------------------------------------------------------------------------------->  ~ MAIN ~
 main(){
 	
 	printf("\n\n\t  - - - - Programa iniciado - - - -\n\n");
+	
+	//declaração de variaveis e criação da struct
 	int matrizUsuarios[tam][tam],opcListausuarios,vzs=10,existe=0,modo=0,listaVelho=0,opcRemover=0;
 	int remover=0,existe1=0,atualiza=0;
 	char nomeListaseguidores[20];
-	usuario vetorUsuarios[tam];
-	inicializaGrafos(vetorUsuarios, matrizUsuarios);	
-	inserirUsuario(vetorUsuarios);
+	usuario vetorUsuarios[tam], user;
+	TNo *ptr;
+	
+	//Inicio do Programa - Chamada de funções
+	
+	inicializaGrafos(vetorUsuarios, matrizUsuarios, &ptr);	
+	
+	inserirUsuario(vetorUsuarios, &ptr, user);
 	
 	printf("\n\n\t  - - - - %d usuarios cadastrados - - - -\n\n", qntCadastros-1);
 	
@@ -454,7 +577,7 @@ main(){
 			}
 			
 			if(existe == 0){
-				printf("O nome digitado nao esta cadastrado na rede. Digite novamente!\n");
+				printf("O primeiro nome digitado nao esta cadastrado na rede. Digite novamente!\n");
 				system("pause");
 			}
 		
@@ -467,7 +590,7 @@ main(){
 			}
 			
 			if(existe1 == 0){
-				printf("O nome digitado nao esta cadastrado na rede. Digite novamente!\n");
+				printf("O segundo nome digitado nao esta cadastrado na rede. Digite novamente!\n");
 				system("pause");
 			}	
 		}
