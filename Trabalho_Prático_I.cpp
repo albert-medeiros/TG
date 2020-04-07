@@ -1,12 +1,10 @@
-/* Os usuáriarios são inseridos atraves de um arquivo externo de forma que o conteudo seja disposto em uma linha o nome do usuario e na ligua em seguida a idade, na proxima
-   nome do Proximo usuario e assim por diante 
+/* 
    
-   Ja a sequencia de seguidores tbm são atribuidas atraves de um arquivo externo tambem com as informacoes separadas por linha, na qual, a primeira ligua o seguidor e na de baixo o seguido e assim por diante 
+   Regras:
+	1-> Usuarios são inseridos atraves do arquivo.txt sendo que são dispostos nome em na primeira linha e idade logo na de baixo
+	2-> A inserção de quem segue quem tbm e feita atraves do arquivo seguir.txt no qual é disposto na primeira linha quem segue e na loga na de baixo quem é seguido
    
-   linha = quem segue
-   coluna = quem eh seguido
-   
-   */
+*/
 
 #include<stdlib.h>
 #include<stdio.h>
@@ -35,101 +33,137 @@ typedef struct no{ //struct para armazenar os valores salvos na árvore
 
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
 
-//int altura(TNo *ptr){  
-//	if (ptr == NULL){ //Caso não haja algum nó na árvore
-//		return -1; //return -1 - altura 
-//	}
-//	
-//	else{
-//		int he = altura(ptr->esq); //percorrer a esquerda
-//		int hd = altura(ptr->dir); //percorrer a direita
-//		if(he<hd){ 		//verifica qual das ramificações é maior
-//			return hd+1;	//conta os níveis das ramificações da direita
-//		}
-//		else{
-//			return he+1;	//conta os níveis das ramificações da esquerda
-//		}
-//	}
-//}
+int altura(TNo *ptr){  
+	if (ptr == NULL){ //Caso não haja algum nó na árvore
+		return -1; //return -1 - altura 
+	}
+	
+	else{
+		int he = altura(ptr->esq); //percorrer a esquerda
+		int hd = altura(ptr->dir); //percorrer a direita
+		if(he<hd){ 		//verifica qual das ramificações é maior
+			return hd+1;	//conta os níveis das ramificações da direita
+		}
+		else{
+			return he+1;	//conta os níveis das ramificações da esquerda
+		}
+	}
+}
+
+void rotacaoDir(TNo **ptr){
+	
+	TNo *q,*temp; //ponteiro
+	q = (*ptr)->esq; //q vai receber a sub árvore a esquerda
+	temp = q->dir; //sub árvore a direita de q 
+	q->dir = (*ptr); //aponta pra raiz da sub árvore passada
+	(*ptr)->esq = temp; //a raiz vai apontar pra temp
+	(*ptr) = q; //defino que q vai ser a nov raiz
+	
+}
+
+void rotacaoEsq(TNo **ptr){
+	TNo *q,*temp; //ponteiro
+	
+	q = (*ptr)->dir; //q vai receber a sub árvore a direita
+	temp = q->esq; //sub árvore a ESQUERDA de q 
+	q->esq = (*ptr); //aponta pra raiz da sub árvore passada
+	(*ptr)->dir = temp; //a raiz vai apontar pra temp
+	(*ptr) = q; //defino que q vai ser a nov raiz
+}
+
+//-----------------------------------------------------------------------------------------------------------------> Arvore
 //
-//void rotacaoDir(TNo **ptr){
-//	
-//	TNo *q,*temp; //ponteiro
-//	
-//	q = (*ptr)->esq; //q vai receber a sub árvore a esquerda
-//	temp = q->dir; //sub árvore a direita de q 
-//	q->dir = (*ptr); //aponta pra raiz da sub árvore passada
-//	(*ptr)->esq = temp; //a raiz vai apontar pra temp
-//	(*ptr) = q; //defino que q vai ser a nov raiz
-//	
-//}
-//
-//void rotacaoEsq(TNo **ptr){
-//	TNo *q,*temp; //ponteiro
-//	
-//	q = (*ptr)->dir; //q vai receber a sub árvore a direita
-//	temp = q->esq; //sub árvore a ESQUERDA de q 
-//	q->esq = (*ptr); //aponta pra raiz da sub árvore passada
-//	(*ptr)->dir = temp; //a raiz vai apontar pra temp
-//	(*ptr) = q; //defino que q vai ser a nov raiz
-//}
-//
-////-----------------------------------------------------------------------------------------------------------------> Arvore
-//
-//		int FB,fb;
-//	
-//		if (*ptr == NULL){ // entra na hora de criar um novo nó
-//			(*ptr) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
-//			(*ptr)->esq = NULL;
-//			(*ptr)->dir = NULL;
-//			strcpy((*ptr)->user.nome, user.nome); // o nó recebe o valor do nome
-//			(*ptr)->user = user; // o nó recebe os outros valores
-//		}
-//		
-//		else{
-////			if(alu.codigo<(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
-////				insereAVL(&(*ptr)->esq,alu); //passa o valor da esquerda se for menor
-////			}
-////			else if(alu.codigo>(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
-//			//	inserirUsuario( vetorUsuarios[tam], &(*ptr)->dir, user); //passa o valor da direita se for maior
-////			}
-//		}
-//		
-//		//FB - Pai;  
-//		//fb - filho;
-//		//Após inserir o valor é verifica do Fator de balanceamento
-//		
-//		FB=(altura((*ptr)->dir))-(altura((*ptr)->esq)); //calcula a altura ao desempilhar
-//		
-//		if(FB == +2){ //caso o FB do nó seja 2 então tem que fazer alteração 
-//				
-//			fb = altura((*ptr)->dir->dir)-altura((*ptr)->dir->esq); //calcula a altura do filho da direita
-//			
-//			if(fb==1){ // se for igual a um então rotação simples 
-//				rotacaoEsq(ptr);
-//			}
-//				
-//			else if(fb == -1){ // se for igual a menos um então rotação dulpa
-//				rotacaoDir(&(*ptr)->dir);
-//				rotacaoEsq(ptr);
-//			}
-//		}
-//			
-//		else if(FB == -2){
-//			
-//			fb = (altura((*ptr)->esq->dir))-(altura((*ptr)->esq->esq)); //calcula a altura do filho da direita
-//			if(fb== -1){ // se for igual a um então rotação simples 
-//				rotacaoDir(ptr);
-//			}
-//		
-//			else if(fb== +1){ // se for igual a menos um então rotação dulpa
-//				rotacaoEsq(&(*ptr)->esq);
-//				rotacaoDir(ptr);
-//			}	
-//		}
-//	
-////-----------------------------------------------------------------------------------------------------------------> Arvore
-//		qntCadastros++;
+//aluno1 
+//aluno2
+//aluno4
+//aluno1
+//aluno10
+//aluno20
+//aluno3
+//aluno15
+//aluno2
+//aluno1
+//aluno2
+//aluno3
+//aluno2
+//aluno4
+//aluno2
+//aluno5
+//aluno2
+//aluno6
+
+void in_ordem(TNo **ptr,int existe){
+	printf("\n\n\n\t\t\t 1");
+	if((ptr[existe]) != NULL){
+		printf("\n\n\n\t\t\t 2");
+		in_ordem(&(ptr[existe])->esq, existe);
+		
+		printf("\nNome: %s\t",(ptr[existe])->user.nome);	
+		printf("\nIdade: %d\t",(ptr[existe])->user.idade);	
+		
+		printf("\n\n\n\t\t\t 3");
+		in_ordem(&(ptr[existe])->dir, existe);
+		printf("\n\n\n\t\t\t 4");
+	}
+}
+
+void insereAVL(TNo **ptr, TipoUsuario user,int linha){
+	int FB,fb;
+
+	if (ptr[linha] == NULL){ // entra na hora de criar um novo nó
+		(ptr[linha]) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
+		(ptr[linha])->esq = NULL;
+		(ptr[linha])->dir = NULL;
+		strcpy((ptr[linha])->user.nome, user.nome); // o nó recebe o valor do nome
+		(ptr[linha])->user = user; // o nó recebe os outros valores
+	}
+	
+	else{
+			if(user.idade<(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor
+				insereAVL(&(ptr[linha])->esq,user,linha); //passa o valor da esquerda se for menor
+			}
+			else if(user.idade>(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor
+				insereAVL(&(ptr[linha])->dir, user, linha); //passa o valor da direita se for maior
+			}
+	}
+	
+	//FB - Pai;  
+	//fb - filho;
+	//Após inserir o valor é verifica do Fator de balanceamento
+	
+	FB=(altura((ptr[linha])->dir))-(altura((ptr[linha])->esq)); //calcula a altura ao desempilhar
+	printf("\n\n\n\t\t\t%d\n\n\n\n",FB);
+	
+	if(FB == +2){ //caso o FB do nó seja 2 então tem que fazer alteração 
+			
+		fb = altura((ptr[linha])->dir->dir)-altura((ptr[linha])->dir->esq); //calcula a altura do filho da direita
+		
+		if(fb==1){ // se for igual a um então rotação simples 
+			rotacaoEsq(ptr);
+		}
+			
+		else if(fb == -1){ // se for igual a menos um então rotação dulpa
+			rotacaoDir(&(ptr[linha])->dir);
+			rotacaoEsq(ptr);
+		}
+	}
+		
+	else if(FB == -2){
+	
+		fb = (altura((ptr[linha])->esq->dir))-(altura((ptr[linha])->esq->esq)); //calcula a altura do filho da direita
+		if(fb== -1){ // se for igual a um então rotação simples 
+			rotacaoDir(ptr);
+		}
+	
+		else if(fb== +1){ // se for igual a menos um então rotação dulpa
+			rotacaoEsq(&(ptr[linha])->esq);
+			rotacaoDir(ptr);
+		}	
+	}
+}
+	
+//-----------------------------------------------------------------------------------------------------------------> Arvore
+	
 
 void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr){ 
 /*
@@ -191,19 +225,18 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 				}
 				
 			}
-		
 //-----------------------------------------------------------------------------------------------------------------> Vetor de Usuarios para ser usaddo como base na hora de inserir, escluir e etc
 		
 			strcpy(vetorUsuarios[qntCadastros].nome,nome);
 			fscanf(entrada, "%d\n",&vetorUsuarios[qntCadastros].idade); //lê os dados do arquivo
 			printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);			
-			
+			qntCadastros++;
 //-----------------------------------------------------------------------------------------------------------------> Vetor de Usuarios para ser usaddo como base na hora de inserir, escluir e etc
 	}
 	
 }
 
-void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){
+void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo *ptr[tam]){
 /*
 i. insere uma relação de “é seguidor de/seguido por” entre um par de usuários;
 ii. nessa operação de inserção, os usuários deverão estar previamente inseridos na rede; 
@@ -229,9 +262,12 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 		fscanf(seguir, "%s\n",&nomeSeguido); //lê os dados do arquivo
 		
 		printf("\n\n--> %s segue %s\n", nomeSeguidor, nomeSeguido);
-		
-//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios				
-		for(int i=1;i<qntCadastros;i++){ //percorre o vetor até achar o nome digitado pelo usuário e salva a posição que ele está pois é a mesma que está na matriz, tanto em linha quanto em coluna
+			
+//-----------------------------------------------------------------------------------------------------------------> Verificacao se existe o usuario			
+		//percorre o vetor até achar o nome digitado pelo usuário e salva a posição que ele está pois 
+		//é a mesma que está na matriz, tanto em linha quanto em coluna		
+		for(int i=1;i<qntCadastros;i++){ 
+			
 			if(strcmp(vetorUsuarios[i].nome,nomeSeguidor) == 0){
 				linha = i;				
 				cont++;
@@ -249,25 +285,28 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 				}
 			}
 		}
+		
 		if(cont != 2){ // se nao entrou duas vezes não tem algum usuario
 			printf("\n\t - somente um usuário encontrado - ");
+			break;
 		}
-	
-		printf("linha %d - Coluna %d\n",linha,coluna);
+//-----------------------------------------------------------------------------------------------------------------> Verificacao se existe o usuario		
+
+//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
+//		printf("linha %d - Coluna %d\n",linha,coluna);
 		matrizUsuarios[linha][coluna] = 1;		
-//		Printar a matriz de pesos                                                          <------------------------------ printar matriz de pesos
-//		for(int i=1;i<qntCadastros;i++){
-//			for(int j=1;j<qntCadastros;j++){
-//				printf("[ %d ]", matrizUsuarios[i][j]);
-//			}
-//			printf("\n");
-//		}	
-		cont=0;	
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
+
+//-----------------------------------------------------------------------------------------------------------------> Arvore
+		insereAVL(ptr,vetorUsuarios[coluna],linha);
+//-----------------------------------------------------------------------------------------------------------------> Arvore
+
+	
+		cont=0;		
 	}
 }
 
-void listarSeguidores(int existe, char nomeListaseguidores[20], usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],int modo){
+void listarSeguidores(int existe, char nomeListaseguidores[20], usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],int modo,TNo *ptr[tam]){
 /*
 i.após o usuário do programa escolher um usuário cadastrado x, esta opção deverá listar todos os usuários os quais x segue e por quais usuários x é seguido,
   inclusive com os tempos relacionados à cada relação existente; 
@@ -304,19 +343,24 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 			}
 			
 			
-			printf(" -------------------- Matriz de Pesos ----------------------- ");
+			printf(" -------------------- Matriz de Pesos ----------------------- \n\n");
 		break;
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios				
 		
 		case 2:
-			printf("\n\n\n -------------------- lista de adjacências ----------------------- ");
-			printf("\n\n\n -------------------- lista de adjacências ----------------------- ");
+			printf("\n\n\n -------------------- lista de adjacencias ----------------------- ");
+			printf("\n\n\n -------------------- lista de adjacencias ----------------------- \n\n");
 		
 		break;
 		
 		case 3:
-			printf("\n\n\n -------------------- lista de adjacências AVL ----------------------- ");
-			printf("\n\n\n -------------------- lista de adjacências AVL ----------------------- ");
+			printf("\n\n\n -------------------- lista de adjacencias AVL ----------------------- ");
+			
+			
+			in_ordem(ptr,existe);
+			
+			
+			printf("\n\n\n -------------------- lista de adjacencias AVL -----------------------\n\n");
 		
 		break;	
 	}
@@ -471,13 +515,14 @@ main(){
 			
 			case 2:
 				
-				inserirRelacao(vetorUsuarios, matrizUsuarios);
+				inserirRelacao(vetorUsuarios, matrizUsuarios,ptr);
 				system("pause");
 				
 			break;
 			
 			case 3:
 				//--------------------------------- Listando os seguidores do usuário a ser escolhido -----------------------------------------------------------
+				existe=0;
 				printf("\n\nVoce deseja listar todos os usuarios ? 1-sim 2-nao\n");
 				scanf("%d",&opcListausuarios); printf("\n\n\t");
 			
@@ -494,37 +539,36 @@ main(){
 							printf("- ");
 						}
 					}
-					
-					A: //se o nome nao for um valido vem pra ca
-					while(existe == 0){
-						printf("\n\nDigite o nome a ser listado: ");
-						scanf("%s", &nomeListaseguidores);
-						for(int i=1;i<qntCadastros;i++){
-							if(strcmp(nomeListaseguidores, vetorUsuarios[i].nome)==0){ //verifica se existe e salva a posicao no vetor que ele esta
-								existe=i;
-							}
-						}
-						
-						if(existe == 0){
-							printf("O nome digitado nao esta cadastrado na rede. Digite novamente!\n");
-							system("pause");
-							goto A;
-						}	
-					}
-					
-					
-					while(modo == 0){
-						printf("\nDigite o modo a ser listado:\n\t\t 1- Matriz de Pesos\n\t\t 2- lista de adjacencias\n\t\t 3- lista de adjacencias em Arvores AVL\n");
-						scanf("%d",&modo);
-						if(modo>3 || modo<0){
-							modo=0;
-							printf("\n\t\tO numero digitado eh invalido. Digite novamente!\n");
-							system("pause");
-						}	
-					}
-					
-					listarSeguidores(existe, nomeListaseguidores,vetorUsuarios,matrizUsuarios,modo);	   
 				}
+					
+				while(existe == 0){
+					printf("\n\nDigite o nome a ser listado: ");
+					scanf("%s", &nomeListaseguidores);
+					for(int i=1;i<qntCadastros;i++){
+						if(strcmp(nomeListaseguidores, vetorUsuarios[i].nome)==0){ //verifica se existe e salva a posicao no vetor que ele esta
+							existe=i;
+						}
+					}
+					
+					if(existe == 0){
+						printf("O nome digitado nao esta cadastrado na rede. Digite novamente!\n");
+						system("pause");
+					}	
+				}
+									
+				while(modo == 0){
+					printf("\nDigite o modo a ser listado:\n\t\t 1- Matriz de Pesos\n\t\t 2- lista de adjacencias\n\t\t 3- lista de adjacencias em Arvores AVL\n");
+					scanf("%d",&modo);
+					if(modo>3 || modo<0){
+						modo=0;
+						printf("\n\t\tO numero digitado eh invalido. Digite novamente!\n");
+						system("pause");
+					}	
+				}
+					
+				listarSeguidores(existe, nomeListaseguidores,vetorUsuarios,matrizUsuarios,modo,ptr);
+				modo=0;	   
+				
 			
 				system("pause");
 			//---------------------------------- Listando os seguidores do usuário a ser escolhido -----------------------------------------------------------
@@ -564,6 +608,7 @@ main(){
 					}
 					
 					listarSeguidoresVelhos(existe,vetorUsuarios,matrizUsuarios);	
+					existe=-1;
 					system("pause");
 				
 			//---------------------------------- Listando quem o usuario mais velho segue -----------------------------------------------------------
@@ -603,11 +648,10 @@ main(){
 					}
 					
 					atualizarRelacao(existe, existe1,vetorUsuarios,matrizUsuarios);
+					existe=-1;existe1=-1;
 
 			
-			//---------------------------------- Atualizando relacoes -----------------------------------------------------------
-
-				
+			//---------------------------------- Atualizando relacoes -----------------------------------------------------------				
 			break;
 			
 			case 6:
