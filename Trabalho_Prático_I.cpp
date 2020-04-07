@@ -19,71 +19,117 @@
 #define ALOCA (TNo*)malloc(sizeof(TNo))
 
 //variavel global para contagem de linha da matriz de pesos
-int qntCadastros=1,flag = -1;
+int qntCadastros=1;
 
 
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
 typedef struct usuario{ // Dados dos usuarios
 	char nome[20];
 	int idade;
-	
 }TipoUsuario;
 
-typedef struct no{
+typedef struct no{ //struct para armazenar os valores salvos na árvore
 	struct no *esq,*dir; // aponta para o proximo no
 	TipoUsuario user; //chave real
 } TNo;
 
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
 
-int altura(TNo *ptr){  
-	if (ptr == NULL){ //Caso não haja algum nó na árvore
-		return -1; //return -1 - altura 
-	}
-	
-	else{
-		int he = altura(ptr->esq); //percorrer a esquerda
-		int hd = altura(ptr->dir); //percorrer a direita
-		if(he<hd){ 		//verifica qual das ramificações é maior
-			return hd+1;	//conta os níveis das ramificações da direita
-		}
-		else{
-			return he+1;	//conta os níveis das ramificações da esquerda
-		}
-	}
-}
-
-void rotacaoDir(TNo **ptr){
-	
-	TNo *q,*temp; //ponteiro
-	
-	q = (*ptr)->esq; //q vai receber a sub árvore a esquerda
-	temp = q->dir; //sub árvore a direita de q 
-	q->dir = (*ptr); //aponta pra raiz da sub árvore passada
-	(*ptr)->esq = temp; //a raiz vai apontar pra temp
-	(*ptr) = q; //defino que q vai ser a nov raiz
-	
-}
-
-void rotacaoEsq(TNo **ptr){
-	TNo *q,*temp; //ponteiro
-	
-	q = (*ptr)->dir; //q vai receber a sub árvore a direita
-	temp = q->esq; //sub árvore a ESQUERDA de q 
-	q->esq = (*ptr); //aponta pra raiz da sub árvore passada
-	(*ptr)->dir = temp; //a raiz vai apontar pra temp
-	(*ptr) = q; //defino que q vai ser a nov raiz
-}
-
-
-
-
-
-
-
-
-
-
+//int altura(TNo *ptr){  
+//	if (ptr == NULL){ //Caso não haja algum nó na árvore
+//		return -1; //return -1 - altura 
+//	}
+//	
+//	else{
+//		int he = altura(ptr->esq); //percorrer a esquerda
+//		int hd = altura(ptr->dir); //percorrer a direita
+//		if(he<hd){ 		//verifica qual das ramificações é maior
+//			return hd+1;	//conta os níveis das ramificações da direita
+//		}
+//		else{
+//			return he+1;	//conta os níveis das ramificações da esquerda
+//		}
+//	}
+//}
+//
+//void rotacaoDir(TNo **ptr){
+//	
+//	TNo *q,*temp; //ponteiro
+//	
+//	q = (*ptr)->esq; //q vai receber a sub árvore a esquerda
+//	temp = q->dir; //sub árvore a direita de q 
+//	q->dir = (*ptr); //aponta pra raiz da sub árvore passada
+//	(*ptr)->esq = temp; //a raiz vai apontar pra temp
+//	(*ptr) = q; //defino que q vai ser a nov raiz
+//	
+//}
+//
+//void rotacaoEsq(TNo **ptr){
+//	TNo *q,*temp; //ponteiro
+//	
+//	q = (*ptr)->dir; //q vai receber a sub árvore a direita
+//	temp = q->esq; //sub árvore a ESQUERDA de q 
+//	q->esq = (*ptr); //aponta pra raiz da sub árvore passada
+//	(*ptr)->dir = temp; //a raiz vai apontar pra temp
+//	(*ptr) = q; //defino que q vai ser a nov raiz
+//}
+//
+////-----------------------------------------------------------------------------------------------------------------> Arvore
+//
+//		int FB,fb;
+//	
+//		if (*ptr == NULL){ // entra na hora de criar um novo nó
+//			(*ptr) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
+//			(*ptr)->esq = NULL;
+//			(*ptr)->dir = NULL;
+//			strcpy((*ptr)->user.nome, user.nome); // o nó recebe o valor do nome
+//			(*ptr)->user = user; // o nó recebe os outros valores
+//		}
+//		
+//		else{
+////			if(alu.codigo<(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
+////				insereAVL(&(*ptr)->esq,alu); //passa o valor da esquerda se for menor
+////			}
+////			else if(alu.codigo>(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
+//			//	inserirUsuario( vetorUsuarios[tam], &(*ptr)->dir, user); //passa o valor da direita se for maior
+////			}
+//		}
+//		
+//		//FB - Pai;  
+//		//fb - filho;
+//		//Após inserir o valor é verifica do Fator de balanceamento
+//		
+//		FB=(altura((*ptr)->dir))-(altura((*ptr)->esq)); //calcula a altura ao desempilhar
+//		
+//		if(FB == +2){ //caso o FB do nó seja 2 então tem que fazer alteração 
+//				
+//			fb = altura((*ptr)->dir->dir)-altura((*ptr)->dir->esq); //calcula a altura do filho da direita
+//			
+//			if(fb==1){ // se for igual a um então rotação simples 
+//				rotacaoEsq(ptr);
+//			}
+//				
+//			else if(fb == -1){ // se for igual a menos um então rotação dulpa
+//				rotacaoDir(&(*ptr)->dir);
+//				rotacaoEsq(ptr);
+//			}
+//		}
+//			
+//		else if(FB == -2){
+//			
+//			fb = (altura((*ptr)->esq->dir))-(altura((*ptr)->esq->esq)); //calcula a altura do filho da direita
+//			if(fb== -1){ // se for igual a um então rotação simples 
+//				rotacaoDir(ptr);
+//			}
+//		
+//			else if(fb== +1){ // se for igual a menos um então rotação dulpa
+//				rotacaoEsq(&(*ptr)->esq);
+//				rotacaoDir(ptr);
+//			}	
+//		}
+//	
+////-----------------------------------------------------------------------------------------------------------------> Arvore
+//		qntCadastros++;
 
 void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr){ 
 /*
@@ -102,18 +148,20 @@ iii. poderão ser utilizados os índices da lista de 1 a n
 	}
 	
 	for(int i=0; i<tam;i++){
-			//printf("%d\n");
-			vetorUsuarios[i].idade = 0;
-			strcpy(vetorUsuarios[i].nome, "");
+		//printf("%d\n");
+		vetorUsuarios[i].idade = 0;
+		strcpy(vetorUsuarios[i].nome, "");
 	}
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
 	
 //-----------------------------------------------------------------------------------------------------------------> Arvore		
-	*ptr = NULL;
+	for(int i=0;i<tam;i++){
+		ptr[i] = NULL;	
+	}
 //-----------------------------------------------------------------------------------------------------------------> Arvore	
 }
 
-void inserirUsuario(usuario vetorUsuarios[tam],TNo **ptr, TipoUsuario user){
+void inserirUsuario(usuario vetorUsuarios[tam]){
 
 /*
 i. libera, dinamicamente, uma linha e uma coluna da matriz de pesos para representar as relações do novo usuário, aloca uma posição de memória em cada uma das listas e realiza a inserção de tal usuário pelo nome (que será fornecido); 
@@ -132,7 +180,6 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 	
 	while(!feof(entrada)){
 		
-		if(flag == -1){
 			fscanf(entrada, "%s\n",&nome); //lê os dados do arquivo
 			
 			//verifica se o usuário já foi inserido e caso já tenha sido inserido encerra-se a insercao
@@ -145,75 +192,13 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 				
 			}
 		
-//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
+//-----------------------------------------------------------------------------------------------------------------> Vetor de Usuarios para ser usaddo como base na hora de inserir, escluir e etc
 		
 			strcpy(vetorUsuarios[qntCadastros].nome,nome);
 			fscanf(entrada, "%d\n",&vetorUsuarios[qntCadastros].idade); //lê os dados do arquivo
-			printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);
-			user = vetorUsuarios[qntCadastros];
-			flag =0;
-		}	
-		
-		
-//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
-
-//-----------------------------------------------------------------------------------------------------------------> Arvore
-
-		int FB,fb;
-	
-		if (*ptr == NULL){ // entra na hora de criar um novo nó
-			(*ptr) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
-			(*ptr)->esq = NULL;
-			(*ptr)->dir = NULL;
-			strcpy((*ptr)->user.nome, user.nome); // o nó recebe o valor do nome
-			(*ptr)->user = user; // o nó recebe os outros valores
-		}
-		
-		else{
-//			if(alu.codigo<(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
-//				insereAVL(&(*ptr)->esq,alu); //passa o valor da esquerda se for menor
-//			}
-//			else if(alu.codigo>(*ptr)->aluno.codigo){ //verificação para saber em qual lado é inserido o valor
-			//	inserirUsuario( vetorUsuarios[tam], &(*ptr)->dir, user); //passa o valor da direita se for maior
-//			}
-		}
-		
-		//FB - Pai;  
-		//fb - filho;
-		//Após inserir o valor é verifica do Fator de balanceamento
-		
-		FB=(altura((*ptr)->dir))-(altura((*ptr)->esq)); //calcula a altura ao desempilhar
-		
-		if(FB == +2){ //caso o FB do nó seja 2 então tem que fazer alteração 
-				
-			fb = altura((*ptr)->dir->dir)-altura((*ptr)->dir->esq); //calcula a altura do filho da direita
+			printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);			
 			
-			if(fb==1){ // se for igual a um então rotação simples 
-				rotacaoEsq(ptr);
-			}
-				
-			else if(fb == -1){ // se for igual a menos um então rotação dulpa
-				rotacaoDir(&(*ptr)->dir);
-				rotacaoEsq(ptr);
-			}
-		}
-			
-		else if(FB == -2){
-			
-			fb = (altura((*ptr)->esq->dir))-(altura((*ptr)->esq->esq)); //calcula a altura do filho da direita
-			if(fb== -1){ // se for igual a um então rotação simples 
-				rotacaoDir(ptr);
-			}
-		
-			else if(fb== +1){ // se for igual a menos um então rotação dulpa
-				rotacaoEsq(&(*ptr)->esq);
-				rotacaoDir(ptr);
-			}	
-		}
-	
-//-----------------------------------------------------------------------------------------------------------------> Arvore
-		qntCadastros++;
-		flag = -1;
+//-----------------------------------------------------------------------------------------------------------------> Vetor de Usuarios para ser usaddo como base na hora de inserir, escluir e etc
 	}
 	
 }
@@ -454,9 +439,9 @@ main(){
 	int existe1=0,opcMenu=-1;
 	char nomeListaseguidores[20];
 	usuario vetorUsuarios[tam], user;
-	TNo *ptr;
+	TNo *ptr[tam];
 	
-	inicializaGrafos(vetorUsuarios, matrizUsuarios, &ptr);
+	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptr);
 	opcMenu=-1;
 	while(opcMenu != 0){
 		system("cls");
@@ -472,13 +457,13 @@ main(){
 		printf("\t\t 7 -> Remover Relacao\n");
 		printf("\t\t 0 -> Finalizar o Programa\n");
 		printf("\t - - - - - - - - - - - - - - - - - - - - - -\n");
-		printf("\t\tOpcao: "); scanf("%d", &opcMenu);
+		printf("\t\tOpcao: "); scanf("%d", &opcMenu); printf("\n\n");
 		
 		
 		switch(opcMenu){
 			case 1:
 				
-				inserirUsuario(vetorUsuarios, &ptr, user);
+				inserirUsuario(vetorUsuarios);
 				printf("\n\n\t  - - - - %d usuarios cadastrados - - - -\n\n", qntCadastros-1);
 				system("pause");
 				
