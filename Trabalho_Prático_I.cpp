@@ -107,22 +107,32 @@ void in_ordem(TNo **ptr,int existe){
 	}
 }
 
-void insereAVL(TNo **ptr, TipoUsuario user,int linha){
+void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
 	int FB,fb;
+	
+	printf("\t\t\t\t\t\tSocorro\t");
 
+	
 	if (ptr[linha] == NULL){ // entra na hora de criar um novo nó
 		(ptr[linha]) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
+		printf("\t1");
 		(ptr[linha])->esq = NULL;
+		printf("\t2");
 		(ptr[linha])->dir = NULL;
+		printf("\t3");
 		strcpy((ptr[linha])->user.nome, user.nome); // o nó recebe o valor do nome
+		printf("\t4");
 		(ptr[linha])->user = user; // o nó recebe os outros valores
 	}
 	
 	else{
+				
 			if(user.idade<(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor
+				printf("AAAAAAAAAAAAAAAAAAAAAAAAAAA\t");
 				insereAVL(&(ptr[linha])->esq,user,linha); //passa o valor da esquerda se for menor
 			}
 			else if(user.idade>(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor
+				printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBB\t");
 				insereAVL(&(ptr[linha])->dir, user, linha); //passa o valor da direita se for maior
 			}
 	}
@@ -130,6 +140,7 @@ void insereAVL(TNo **ptr, TipoUsuario user,int linha){
 	//FB - Pai;  
 	//fb - filho;
 	//Após inserir o valor é verifica do Fator de balanceamento
+	
 	
 	FB=(altura((ptr[linha])->dir))-(altura((ptr[linha])->esq)); //calcula a altura ao desempilhar
 	printf("\n\n\n\t\t\t%d\n\n\n\n",FB);
@@ -139,12 +150,12 @@ void insereAVL(TNo **ptr, TipoUsuario user,int linha){
 		fb = altura((ptr[linha])->dir->dir)-altura((ptr[linha])->dir->esq); //calcula a altura do filho da direita
 		
 		if(fb==1){ // se for igual a um então rotação simples 
-			rotacaoEsq(ptr);
+			rotacaoEsq(&ptr[linha]);
 		}
 			
 		else if(fb == -1){ // se for igual a menos um então rotação dulpa
 			rotacaoDir(&(ptr[linha])->dir);
-			rotacaoEsq(ptr);
+			rotacaoEsq(&ptr[linha]);
 		}
 	}
 		
@@ -152,12 +163,12 @@ void insereAVL(TNo **ptr, TipoUsuario user,int linha){
 	
 		fb = (altura((ptr[linha])->esq->dir))-(altura((ptr[linha])->esq->esq)); //calcula a altura do filho da direita
 		if(fb== -1){ // se for igual a um então rotação simples 
-			rotacaoDir(ptr);
+			rotacaoDir(&ptr[linha]);
 		}
 	
 		else if(fb== +1){ // se for igual a menos um então rotação dulpa
 			rotacaoEsq(&(ptr[linha])->esq);
-			rotacaoDir(ptr);
+			rotacaoDir(&ptr[linha]);
 		}	
 	}
 }
