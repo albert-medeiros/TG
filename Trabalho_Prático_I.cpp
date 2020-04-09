@@ -93,7 +93,7 @@ main(){
 						system("pause");
 					}	
 				}
-				// ------------------ Comeco da verificacao em qual estrutura será mostrado a seguencia de seguidores e seguidos ---------------------									
+				// ------------------ Fim da verificacao em qual estrutura será mostrado a seguencia de seguidores e seguidos ---------------------									
 					
 				listarSeguidores(existe,vetorUsuarios,matrizUsuarios,modo,ptr); /* chama a função resposavel por listar os seguidores, para ela é passada
 				a posicao em que o nome esta no vetor (exite), o vetor auxiliar onde estão inseridos os usuario (vetorUsuarios), a matriz de adjacencias

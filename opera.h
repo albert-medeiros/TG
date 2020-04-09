@@ -3,7 +3,7 @@
    Regras:
 	1-> Usuarios são inseridos atraves do arquivo.txt sendo que são dispostos nome em na primeira linha e idade logo na de baixo
 	2-> A inserção de quem segue quem tbm e feita atraves do arquivo seguir.txt no qual é disposto na primeira linha quem segue e na loga na de baixo quem é seguido
-   
+    3-> Em todas as verificacoes comeca-se no 1 pois o vetor tem 51 posicoes
 */
 
 #include<stdlib.h>
@@ -106,34 +106,34 @@ void in_ordem(TNo **ptr,int existe){
 		printf("\n\n\n\t\t\t 4");
 	}
 }
-
+int entrou1 =0,entrou2=0;
 void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
+	
+	//printf("Entrou no InsereAVL e vai inserir na linha %d o usuario %s\t",linha,user.nome);
 	int FB,fb;
-	
-	printf("\t\t\t\t\t\tSocorro\t");
-
-	
+		
 	if (ptr[linha] == NULL){ // entra na hora de criar um novo nó
 		(ptr[linha]) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
-		printf("\t1");
 		(ptr[linha])->esq = NULL;
-		printf("\t2");
 		(ptr[linha])->dir = NULL;
-		printf("\t3");
 		strcpy((ptr[linha])->user.nome, user.nome); // o nó recebe o valor do nome
-		printf("\t4");
 		(ptr[linha])->user = user; // o nó recebe os outros valores
 	}
 	
+//	else if (*ptr1 == NULL){ // entra na hora de criar um novo nó
+//		(*ptr1) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
+//		(*ptr1)->esq = NULL;
+//		(*ptr1)->dir = NULL;
+//		(*ptr1)->user = user; // o nó recebe os outros valores
+//	}
+	
 	else{
 				
-			if(user.idade<(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor
-				printf("AAAAAAAAAAAAAAAAAAAAAAAAAAA\t");
-				insereAVL(&(ptr[linha])->esq,user,linha); //passa o valor da esquerda se for menor
+			if(user.idade<(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor			
+				insereAVL(&(*ptr[linha]).esq,user,linha); //passa o valor da esquerda se for menor
 			}
-			else if(user.idade>(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor
-				printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBB\t");
-				insereAVL(&(ptr[linha])->dir, user, linha); //passa o valor da direita se for maior
+			else if(user.idade>(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor			
+				insereAVL(&(*ptr[linha]).dir, user, linha); //passa o valor da direita se for maior
 			}
 	}
 	
@@ -146,6 +146,7 @@ void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
 	printf("\n\n\n\t\t\t%d\n\n\n\n",FB);
 	
 	if(FB == +2){ //caso o FB do nó seja 2 então tem que fazer alteração 
+		printf("\n\t\t\tEntrou1: %d - entrou2: %d",entrou1,entrou2);
 			
 		fb = altura((ptr[linha])->dir->dir)-altura((ptr[linha])->dir->esq); //calcula a altura do filho da direita
 		
@@ -160,6 +161,7 @@ void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
 	}
 		
 	else if(FB == -2){
+		printf("\n\t\t\tEntrou1: %d - entrou2: %d",entrou1,entrou2);
 	
 		fb = (altura((ptr[linha])->esq->dir))-(altura((ptr[linha])->esq->esq)); //calcula a altura do filho da direita
 		if(fb== -1){ // se for igual a um então rotação simples 
@@ -174,7 +176,8 @@ void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
 }
 	
 //-----------------------------------------------------------------------------------------------------------------> Arvore
-	
+
+
 
 void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr){ 
 /*

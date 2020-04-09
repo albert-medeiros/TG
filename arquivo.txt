@@ -1,7 +1,7 @@
 aluno1
 1
 aluno2
-40
+2
 aluno3
 3
 aluno4
