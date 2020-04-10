@@ -25,6 +25,7 @@ main(){
 	usuario vetorUsuarios[tam], user;
 	TNo *ptr[tam];
 	
+	
 	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptr);
 	
 	opcMenu=-1;

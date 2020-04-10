@@ -4,6 +4,9 @@
 	1-> Usuarios são inseridos atraves do arquivo.txt sendo que são dispostos nome em na primeira linha e idade logo na de baixo
 	2-> A inserção de quem segue quem tbm e feita atraves do arquivo seguir.txt no qual é disposto na primeira linha quem segue e na loga na de baixo quem é seguido
     3-> Em todas as verificacoes comeca-se no 1 pois o vetor tem 51 posicoes
+    4-> A variavel linha representa a posicao de quem vai comecar a seguir 
+    5-> A variavel coluna representa a posicao de quem vai comecar a ser seguido
+    
 */
 
 #include<stdlib.h>
@@ -33,6 +36,8 @@ typedef struct no{ //struct para armazenar os valores salvos na árvore
 
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
 
+
+//-----------------------------------------------------------------------------------------------------------------> Comeco Funcoes usadas exclusivamenetes na Arvore AVL
 int altura(TNo *ptr){  
 	if (ptr == NULL){ //Caso não haja algum nó na árvore
 		return -1; //return -1 - altura 
@@ -71,72 +76,41 @@ void rotacaoEsq(TNo **ptr){
 	(*ptr) = q; //defino que q vai ser a nov raiz
 }
 
-//-----------------------------------------------------------------------------------------------------------------> Arvore
-//
-//aluno1 
-//aluno2
-//aluno4
-//aluno1
-//aluno10
-//aluno20
-//aluno3
-//aluno15
-//aluno2
-//aluno1
-//aluno2
-//aluno3
-//aluno2
-//aluno4
-//aluno2
-//aluno5
-//aluno2
-//aluno6
 
-void in_ordem(TNo **ptr,int existe){
-	printf("\n\n\n\t\t\t 1");
-	if((ptr[existe]) != NULL){
-		printf("\n\n\n\t\t\t 2");
-		in_ordem(&(ptr[existe])->esq, existe);
-		
-		printf("\nNome: %s\t",(ptr[existe])->user.nome);	
-		printf("\nIdade: %d\t",(ptr[existe])->user.idade);	
-		
-		printf("\n\n\n\t\t\t 3");
-		in_ordem(&(ptr[existe])->dir, existe);
-		printf("\n\n\n\t\t\t 4");
+//
+
+
+void in_ordem(TNo *ptr){
+	if((ptr) != NULL){
+		in_ordem((ptr)->esq);		
+		printf("\t\t\t %s\n",(ptr)->user.nome);	
+		in_ordem((ptr)->dir);
+	}
+	else{
+		printf("\t\t\t O usuario nao segue ninguem!\n");
 	}
 }
-int entrou1 =0,entrou2=0;
-void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
+
+void insereAVL(TNo **ptr, TipoUsuario user){
 	
 	//printf("Entrou no InsereAVL e vai inserir na linha %d o usuario %s\t",linha,user.nome);
 	int FB,fb;
 		
-	if (ptr[linha] == NULL && entrou1==0){ // entra na hora de criar um novo nó
-		(ptr[linha]) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
-		(ptr[linha])->esq = NULL;
-		(ptr[linha])->dir = NULL;
-		strcpy((ptr[linha])->user.nome, user.nome); // o nó recebe o valor do nome
-		(ptr[linha])->user = user; // o nó recebe os outros valores
-		entrou1 =1;
-	}
-	
-	else if (*ptr == NULL && entrou1 == 1){ // entra na hora de criar um novo nó
-	printf("Entrou aqui irmão ->\t");
+	if (*ptr == NULL ){ // entra na hora de criar um novo nó
 		(*ptr) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
 		(*ptr)->esq = NULL;
 		(*ptr)->dir = NULL;
-		(*ptr)->user = user; // o nó recebe os outros valores
+		strcpy((*ptr)->user.nome, user.nome); // o nó recebe o valor do nome
+		(*ptr)->user.idade = user.idade; // o nó recebe os outros valores
 	}
 	
 	else{
-				
-			if(user.idade<(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor			
-				insereAVL(&(*ptr[linha]).esq,user,linha); //passa o valor da esquerda se for menor
-			}
-			else if(user.idade>(ptr[linha])->user.idade){ //verificação para saber em qual lado é inserido o valor			
-				insereAVL(&(*ptr[linha]).dir, user, linha); //passa o valor da direita se for maior
-			}
+		if(user.idade<(*ptr)->user.idade){ //verificação para saber em qual lado é inserido o valor
+			insereAVL(&(*ptr)->esq,user); //passa o valor da esquerda se for menor
+		}
+		else if(user.idade>(*ptr)->user.idade){ //verificação para saber em qual lado é inserido o valor
+			insereAVL(&(*ptr)->dir,user); //passa o valor da direita se for maior
+		}
 	}
 	
 	//FB - Pai;  
@@ -144,40 +118,67 @@ void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
 	//Após inserir o valor é verifica do Fator de balanceamento
 	
 	
-	FB=(altura((ptr[linha])->dir))-(altura((ptr[linha])->esq)); //calcula a altura ao desempilhar
-	printf("\n\n\n\t\t\t%d\n\n\n\n",FB);
+	FB=(altura((*ptr)->dir))-(altura((*ptr)->esq)); //calcula a altura ao desempilhar
 	
 	if(FB == +2){ //caso o FB do nó seja 2 então tem que fazer alteração 
-		printf("\n\t\t\tEntrou1: %d - entrou2: %d",entrou1,entrou2);
 			
-		fb = altura((ptr[linha])->dir->dir)-altura((ptr[linha])->dir->esq); //calcula a altura do filho da direita
+		fb = altura((*ptr)->dir->dir)-altura((*ptr)->dir->esq); //calcula a altura do filho da direita
 		
-		if(fb==1){ // se for igual a um então rotação simples 
-			rotacaoEsq(&ptr[linha]);
+		if(fb == 1){ // se for igual a um então rotação simples 
+			rotacaoEsq(&(*ptr));
 		}
 			
 		else if(fb == -1){ // se for igual a menos um então rotação dulpa
-			rotacaoDir(&(ptr[linha])->dir);
-			rotacaoEsq(&ptr[linha]);
+			rotacaoDir(&(*ptr)->dir);
+			rotacaoEsq(&(*ptr));
 		}
 	}
 		
 	else if(FB == -2){
-		printf("\n\t\t\tEntrou1: %d - entrou2: %d",entrou1,entrou2);
 	
-		fb = (altura((ptr[linha])->esq->dir))-(altura((ptr[linha])->esq->esq)); //calcula a altura do filho da direita
-		if(fb== -1){ // se for igual a um então rotação simples 
-			rotacaoDir(&ptr[linha]);
+		fb = (altura((*ptr)->esq->dir))-(altura((*ptr)->esq->esq)); //calcula a altura do filho da direita
+		if(fb == -1){ // se for igual a um então rotação simples 
+			rotacaoDir(&(*ptr));
 		}
 	
-		else if(fb== +1){ // se for igual a menos um então rotação dulpa
-			rotacaoEsq(&(ptr[linha])->esq);
-			rotacaoDir(&ptr[linha]);
+		else if(fb == +1){ // se for igual a menos um então rotação dulpa
+			rotacaoEsq(&(*ptr)->esq);
+			rotacaoDir(&(*ptr));
 		}	
 	}
 }
+int retorno;
+void pUsuario(TNo *ptr,char nome,int idade){
+	int quant=1;
+	char nombre[20] = (ptr->user.nome);
+	TNo *aux;
+	if(strcmp(nombre , nome) == 0){
+		retorno=1;
+	}
+	else{	
+		while((ptr!= NULL)&&(strcmp(nombre,nome) == 0)){
+			quant++;
+			
+			//aux armzena o nó raiz da sub arvore pesquisada ficando 1 atrasado 
+			aux = ptr;
+			if(idade>ptr->user.idade){
+				ptr=ptr->dir;
+			}
+			
+			else{
+				ptr = ptr->esq;
+			}
+		}
+		if(ptr==NULL){
+			retorno=0;
+		}
+		else{
+			retorno=1;
+		}
+	}
+}
 	
-//-----------------------------------------------------------------------------------------------------------------> Arvore
+//-----------------------------------------------------------------------------------------------------------------> Fim Funcoes usadas exclusivamenetes na Arvore AVL
 
 
 
@@ -252,7 +253,7 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 	
 }
 
-void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo *ptr[tam]){
+void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr){
 /*
 i. insere uma relação de “é seguidor de/seguido por” entre um par de usuários;
 ii. nessa operação de inserção, os usuários deverão estar previamente inseridos na rede; 
@@ -267,15 +268,18 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 
 	char nomeSeguido[20], nomeSeguidor[20];
 	int coluna=0, linha=0,cont=0;
+	TNo *ptrAux;
+	usuario usuariosAux;
+	
 	FILE *seguir = fopen("seguir.txt", "r"); //abertura do arquivo	
 	if(seguir == NULL){
 		printf("\t  -> Erro na abertura do arquivo");
 		system("pause");
 	}
 	
-	while(!feof(seguir)){
-		fscanf(seguir, "%s\n",&nomeSeguidor); //lê os dados do arquivo
-		fscanf(seguir, "%s\n",&nomeSeguido); //lê os dados do arquivo
+	while(!feof(seguir)){ // responsavel por ler até o fim do arquivo
+		fscanf(seguir, "%s\n",&nomeSeguidor); //lê os dados de quem vai comecar a seguir 
+		fscanf(seguir, "%s\n",&nomeSeguido); //lê os dados de quem vai comecar a ser seguido
 		
 		printf("\n\n--> %s segue %s\n", nomeSeguidor, nomeSeguido);
 			
@@ -309,12 +313,20 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 //-----------------------------------------------------------------------------------------------------------------> Verificacao se existe o usuario		
 
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
-//		printf("linha %d - Coluna %d\n",linha,coluna);
+		printf("\t\t\t\t-> Valor inserido na Matriz de adjacencias");
 		matrizUsuarios[linha][coluna] = 1;		
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
 
 //-----------------------------------------------------------------------------------------------------------------> Arvore
-		insereAVL(ptr,vetorUsuarios[coluna],linha);
+		/* estava dando problema quando eu tentava mandar inserir ja no vetor direto, entao, foi criado auxiliares para a posicao que era da arvore 
+		e para os dados que vao ser inseridos pois desta forma as alteracoes que seriam feitas na funcao sao menores e funcionaram (hihihihihi), portanto, 
+		apos enviar a posicao do vetor de arvore recebe de volta os dados atualizados */
+		
+		ptrAux = ptr[linha];
+		usuariosAux = vetorUsuarios[coluna];
+		
+		insereAVL(&ptrAux,usuariosAux);
+		ptr[linha] = ptrAux;
 //-----------------------------------------------------------------------------------------------------------------> Arvore
 
 	
@@ -331,6 +343,9 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 */
 
 	int segue=0,eSeguido=0;
+	TNo *ptrAux;
+	usuario usuariosAux;
+	
 	switch(modo){
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios				
 		case 1:
@@ -370,10 +385,19 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 		break;
 		
 		case 3:
-			printf("\n\n\n -------------------- lista de adjacencias AVL ----------------------- ");
+			printf("\n\n\n -------------------- lista de adjacencias AVL ----------------------- \n\n");
 			
+			ptrAux = ptr[existe];
+//			usuariosAux = vetorUsuarios[coluna];			
+			in_ordem(ptrAux); // nesse caso irao ser listados os usuarios da rede que sao seguidos pelo passado pelo usuario do programa
+			for(int i=1;i<qntCadastros;i++){
+				retorno = pUsuario(ptr,vetorUsuarios[existe].nome,vetorUsuarios[existe].idade);
+				if(retorno == 1){
+					printf("\t\t\t %s\n", vetorUsuarios[i].nome);
+				}
 			
-			in_ordem(ptr,existe);
+				retorno=0;
+			}
 			
 			
 			printf("\n\n\n -------------------- lista de adjacencias AVL -----------------------\n\n");
@@ -514,6 +538,7 @@ retornando a posicao que ele se encotra no vetor responsavel por armazenar os ca
 	for(int i=1;i<qntCadastros;i++){
 		if(strcmp(nomeListaCadastrados, vetorUsuarios[i].nome)==0){ //verifica onde que e igual e se existe e salva a posicao no vetor que ele esta
 			posicao=i;
+			break;
 		}
 	}
 	
