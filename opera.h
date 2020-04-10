@@ -112,20 +112,22 @@ void insereAVL(TNo *ptr[tam], TipoUsuario user,int linha){
 	//printf("Entrou no InsereAVL e vai inserir na linha %d o usuario %s\t",linha,user.nome);
 	int FB,fb;
 		
-	if (ptr[linha] == NULL){ // entra na hora de criar um novo nó
+	if (ptr[linha] == NULL && entrou1==0){ // entra na hora de criar um novo nó
 		(ptr[linha]) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
 		(ptr[linha])->esq = NULL;
 		(ptr[linha])->dir = NULL;
 		strcpy((ptr[linha])->user.nome, user.nome); // o nó recebe o valor do nome
 		(ptr[linha])->user = user; // o nó recebe os outros valores
+		entrou1 =1;
 	}
 	
-//	else if (*ptr1 == NULL){ // entra na hora de criar um novo nó
-//		(*ptr1) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
-//		(*ptr1)->esq = NULL;
-//		(*ptr1)->dir = NULL;
-//		(*ptr1)->user = user; // o nó recebe os outros valores
-//	}
+	else if (*ptr == NULL && entrou1 == 1){ // entra na hora de criar um novo nó
+	printf("Entrou aqui irmão ->\t");
+		(*ptr) = ALOCA; //aloco dinamicamente um espaço pra "ptr"
+		(*ptr)->esq = NULL;
+		(*ptr)->dir = NULL;
+		(*ptr)->user = user; // o nó recebe os outros valores
+	}
 	
 	else{
 				
