@@ -147,42 +147,13 @@ void insereAVL(TNo **ptr, TipoUsuario user){
 		}	
 	}
 }
-int retorno;
-void pUsuario(TNo *ptr,char nome,int idade){
-	int quant=1;
-	char nombre[20] = (ptr->user.nome);
-	TNo *aux;
-	if(strcmp(nombre , nome) == 0){
-		retorno=1;
-	}
-	else{	
-		while((ptr!= NULL)&&(strcmp(nombre,nome) == 0)){
-			quant++;
-			
-			//aux armzena o nó raiz da sub arvore pesquisada ficando 1 atrasado 
-			aux = ptr;
-			if(idade>ptr->user.idade){
-				ptr=ptr->dir;
-			}
-			
-			else{
-				ptr = ptr->esq;
-			}
-		}
-		if(ptr==NULL){
-			retorno=0;
-		}
-		else{
-			retorno=1;
-		}
-	}
-}
+
 	
 //-----------------------------------------------------------------------------------------------------------------> Fim Funcoes usadas exclusivamenetes na Arvore AVL
 
 
 
-void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr){ 
+void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido){ 
 /*
 i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
 ii. não é necessário oferecer essa opção ao usuário; 
@@ -209,6 +180,10 @@ iii. poderão ser utilizados os índices da lista de 1 a n
 	for(int i=0;i<tam;i++){
 		ptr[i] = NULL;	
 	}
+	
+	for(int i=0;i<tam;i++){
+		ptrSeguido[i] = NULL;
+	}
 //-----------------------------------------------------------------------------------------------------------------> Arvore	
 }
 
@@ -220,6 +195,7 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 */
 
 	char nome[20];
+	int entrou=0;
 	
 	FILE *entrada = fopen("arquivo.txt", "r"); //abertura do arquivo 
 				
@@ -230,30 +206,36 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 	
 	
 	while(!feof(entrada)){
-		
 			fscanf(entrada, "%s\n",&nome); //lê os dados do arquivo
 			
 			//verifica se o usuário já foi inserido e caso já tenha sido inserido encerra-se a insercao
 			for(int j=1;j<=qntCadastros;j++){
 				if(strcmp(vetorUsuarios[j].nome,nome) == 0){
 					printf("\n\t\t - - - Usuario ' %s ' ja foi inserido - - -\n\n",nome);
-					system("pause");
+					entrou=1;
 					break;
 				}
 				
 			}
-//-----------------------------------------------------------------------------------------------------------------> Vetor de Usuarios para ser usaddo como base na hora de inserir, escluir e etc
-		
+			if(entrou == 1){
+				printf("\n\n\n\t\t\t A insecao sera encerrada");
+				system("pause");
+				break;
+			}
+			//-----------------------------------------------------------------------------------------------------------------> Vetor de Usuarios para ser usaddo como base na hora de inserir, escluir e etc
+			
 			strcpy(vetorUsuarios[qntCadastros].nome,nome);
 			fscanf(entrada, "%d\n",&vetorUsuarios[qntCadastros].idade); //lê os dados do arquivo
 			printf("\tUsuario %s cadastrado\n",vetorUsuarios[qntCadastros].nome);			
-			qntCadastros++;
+			qntCadastros++;	
+						
+			
 //-----------------------------------------------------------------------------------------------------------------> Vetor de Usuarios para ser usaddo como base na hora de inserir, escluir e etc
 	}
 	
 }
 
-void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr){
+void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido){
 /*
 i. insere uma relação de “é seguidor de/seguido por” entre um par de usuários;
 ii. nessa operação de inserção, os usuários deverão estar previamente inseridos na rede; 
@@ -268,7 +250,7 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 
 	char nomeSeguido[20], nomeSeguidor[20];
 	int coluna=0, linha=0,cont=0;
-	TNo *ptrAux;
+	TNo *ptrAux;TNo *ptrAux1;
 	usuario usuariosAux;
 	
 	FILE *seguir = fopen("seguir.txt", "r"); //abertura do arquivo	
@@ -313,7 +295,7 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 //-----------------------------------------------------------------------------------------------------------------> Verificacao se existe o usuario		
 
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
-		printf("\t\t\t\t-> Valor inserido na Matriz de adjacencias");
+//		printf("\t\t\t\t-> Valor inserido na Matriz de adjacencias");
 		matrizUsuarios[linha][coluna] = 1;		
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
 
@@ -323,10 +305,21 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 		apos enviar a posicao do vetor de arvore recebe de volta os dados atualizados */
 		
 		ptrAux = ptr[linha];
-		usuariosAux = vetorUsuarios[coluna];
-		
+		usuariosAux = vetorUsuarios[coluna];		
 		insereAVL(&ptrAux,usuariosAux);
 		ptr[linha] = ptrAux;
+		
+		ptrAux1 = ptrSeguido[coluna];
+		usuariosAux = vetorUsuarios[linha];		
+		insereAVL(&ptrAux1,usuariosAux);
+		ptrSeguido[coluna] = ptrAux1;
+		
+//		printf("Olha aqui oh o usuario a ser inserido eh o %s na posicao %d",vetorUsuarios[linha],coluna);
+//		ptrAux1 = ptrSeguido[linha];
+//		printf("\n\n\t O usuario %s é seguido ",ptrAux1->user.nome);
+//		usuariosAux = vetorUsuarios[coluna];
+//		insereAVL(&ptrAux1,usuariosAux);
+//		ptr[coluna] = ptrAux1;
 //-----------------------------------------------------------------------------------------------------------------> Arvore
 
 	
@@ -334,7 +327,7 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 	}
 }
 
-void listarSeguidores(int existe, usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],int modo,TNo *ptr[tam]){
+void listarSeguidores(int existe, usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],int modo,TNo *ptr[tam],TNo *ptrSeguido[tam]){
 /*
 i.após o usuário do programa escolher um usuário cadastrado x, esta opção deverá listar todos os usuários os quais x segue e por quais usuários x é seguido,
   inclusive com os tempos relacionados à cada relação existente; 
@@ -343,7 +336,7 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 */
 
 	int segue=0,eSeguido=0;
-	TNo *ptrAux;
+	TNo *ptrAux,*ptrAux1;
 	usuario usuariosAux;
 	
 	switch(modo){
@@ -390,15 +383,12 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 			ptrAux = ptr[existe];
 //			usuariosAux = vetorUsuarios[coluna];			
 			in_ordem(ptrAux); // nesse caso irao ser listados os usuarios da rede que sao seguidos pelo passado pelo usuario do programa
-			for(int i=1;i<qntCadastros;i++){
-				retorno = pUsuario(ptr,vetorUsuarios[existe].nome,vetorUsuarios[existe].idade);
-				if(retorno == 1){
-					printf("\t\t\t %s\n", vetorUsuarios[i].nome);
-				}
 			
-				retorno=0;
-			}
-			
+//			printf("\n\n\n\n\n%s\n\n\n\n",ptrSeguido[2]->user.nome);
+//			ptrAux1 = ptrSeguido[existe];
+////			usuariosAux = vetorUsuarios[coluna];			
+//			in_ordem(ptrAux); // nesse caso irao ser listados os usuarios da rede que sao seguidos pelo passado pelo usuario do programa
+//			
 			
 			printf("\n\n\n -------------------- lista de adjacencias AVL -----------------------\n\n");
 		

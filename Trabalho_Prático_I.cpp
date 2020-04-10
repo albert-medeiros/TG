@@ -23,10 +23,10 @@ main(){
 	int existe1=0,opcMenu=-1;
 	char nomeListaCadastrados[20];
 	usuario vetorUsuarios[tam], user;
-	TNo *ptr[tam];
+	TNo *ptrSegue[tam],*ptrSeguido[tam]; //ptrSegue é o vetor que mostra quem o usuário segue e ptrSeguido por quem o usuario é seguido
 	
 	
-	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptr);
+	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptrSegue, ptrSeguido);
 	
 	opcMenu=-1;
 	while(opcMenu != 0){
@@ -58,7 +58,7 @@ main(){
 			
 			case 2:
 				
-				inserirRelacao(vetorUsuarios, matrizUsuarios,ptr);
+				inserirRelacao(vetorUsuarios, matrizUsuarios,ptrSegue,ptrSeguido);
 				system("pause");
 				
 			break;
@@ -96,9 +96,9 @@ main(){
 				}
 				// ------------------ Fim da verificacao em qual estrutura será mostrado a seguencia de seguidores e seguidos ---------------------									
 					
-				listarSeguidores(existe,vetorUsuarios,matrizUsuarios,modo,ptr); /* chama a função resposavel por listar os seguidores, para ela é passada
+				listarSeguidores(existe,vetorUsuarios,matrizUsuarios,modo,ptrSegue,ptrSeguido); /* chama a função resposavel por listar os seguidores, para ela é passada
 				a posicao em que o nome esta no vetor (exite), o vetor auxiliar onde estão inseridos os usuario (vetorUsuarios), a matriz de adjacencias
-				(matrizUsuarios), em qual estrutura será mostrada (modo), vetor de arvores (ptr) */
+				(matrizUsuarios), em qual estrutura será mostrada (modo), vetor de arvores (ptrSegue) */
 				system("pause");
 			//---------------------------------- Fim Listando os seguidores do usuário a ser escolhido -----------------------------------------------------------
 
