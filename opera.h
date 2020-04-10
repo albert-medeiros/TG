@@ -590,19 +590,48 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios				
 		strcpy(aux,vetorUsuarios[existe].nome);
 
-//---------------------------- Removendo do vetor ------------------	
+//---------------------------- Comeco Removendo do vetor ------------------	
 		for(int i=existe;i<qntCadastros;i++){
 			vetorUsuarios[i] = vetorUsuarios[i+1];
 		}
 		
-//---------------------------- Removendo do vetor ------------------
+//---------------------------- Fim Removendo do vetor ------------------
+printf("\n");
+for(int i=1;i<qntCadastros;i++){
+	for(int j=1;j<qntCadastros;j++){
+		printf("[%d]",matrizUsuarios[i][j]);
+	}
+	printf("\n");
+}
 
-//---------------------------- Removendo da matriz ------------------		
-		for(int i=1;i<qntCadastros;i++){
-			matrizUsuarios[existe][i] = matrizUsuarios[existe][i+1];
-			matrizUsuarios[i][existe] = matrizUsuarios[i+1][existe];
+//---------------------------- Comeco Removendo da matriz ------------------		
+	for(int i=0;i<qntCadastros;i++){
+		for(int j=existe;j<qntCadastros;j++){
+			matrizUsuarios[i][j] = matrizUsuarios[i][j+1];
 		}
-//---------------------------- Removendo da matriz ------------------
+	}
+	
+	for(int i=existe;i<qntCadastros;i++){
+		for(int j=0;j<qntCadastros;j++){
+			matrizUsuarios[i][j] = matrizUsuarios[i+1][j];
+		}
+	}
+
+
+//		for(int i=0;i<qntCadastros;i++){ //copia a linha do de baixo pra posicao a ser retirada
+
+//		}
+//		for(int i=0;i<qntCadastros;i++){ //copia a coluna do do lado pra posicao que foi retirada
+//			matrizUsuarios[i][existe] = matrizUsuarios[i][existe+1];
+//		}
+//---------------------------- Fim Removendo da matriz ------------------
+printf("\n\n\n\n________________________\n\n\n\n");
+for(int i=1;i<qntCadastros;i++){
+	for(int j=1;j<qntCadastros;j++){
+		printf("[%d]",matrizUsuarios[i][j]);
+	}
+	printf("\n");
+}
 
 
 //---------------------------- Comeco Removendo da arvore ------------------
