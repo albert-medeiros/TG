@@ -3,7 +3,10 @@
    Regras:
 	1-> Usuarios são inseridos atraves do arquivo.txt sendo que são dispostos nome em na primeira linha e idade logo na de baixo
 	2-> A inserção de quem segue quem tbm e feita atraves do arquivo seguir.txt no qual é disposto na primeira linha quem segue e na loga na de baixo quem é seguido
-   
+    3-> Em todas as verificacoes comeca-se no 1 pois o vetor tem 51 posicoes
+    4-> A variavel linha representa a posicao de quem vai comecar a seguir 
+    5-> A variavel coluna representa a posicao de quem vai comecar a ser seguido
+    
 */
 
 #include<stdlib.h>
@@ -58,7 +61,11 @@ main(){
 			
 			case 2:
 				
-				inserirRelacao(vetorUsuarios, matrizUsuarios,ptrSegue,ptrSeguido);
+				inserirRelacao(vetorUsuarios, matrizUsuarios,ptrSegue,ptrSeguido); /* é na insercao de realacao que se preenche as estruturas ( matris de adjacencias
+				lista de adjacencias e arvores. nesse caso oprtou-se por utilizar duas arvores 1 para salvar quem o usuario segue e outra pra quem o usuario é seguido para
+				desta forma ficar mais simmples quando for necessario mostrar o mais velho ou seguidores e seguidos. */
+				
+				printf("\n\n");
 				system("pause");
 				
 			break;
@@ -78,9 +85,9 @@ main(){
 				
 				// ------------------ Comeco da verificacao se o nome a ser pesquisado exite ---------------------	
 				while(existe==0){
-					printf("\n\nDigite o nome do usuario a ser verificado: ");
+					printf("\nDigite o nome do usuario a ser verificado: ");
 					scanf("%s", &nomeListaCadastrados);
-					existe = verificaSeExiste(vetorUsuarios, nomeListaCadastrados);								
+					existe = verificaSeExiste(vetorUsuarios, nomeListaCadastrados);	//existe recebe o retorno da funcao que eh a posicao que o nome esta
 				}
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------	
 
@@ -119,13 +126,13 @@ main(){
 									
 				// ------------------ Comeco da verificacao se o nome a ser pesquisado exite ---------------------	
 				while(existe==0){
-					printf("\n\nDigite o nome do usuario a ser verificado: ");
+					printf("\nDigite o nome do usuario a ser verificado: ");
 					scanf("%s", &nomeListaCadastrados);
 					existe = verificaSeExiste(vetorUsuarios, nomeListaCadastrados);								
 				}
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------	
 				
-				listarSeguidoresVelhos(existe,vetorUsuarios,matrizUsuarios); /* Colocar explicacao */				
+				listarSeguidoresVelhos(existe,vetorUsuarios,matrizUsuarios,ptrSegue); /* Colocar explicacao */				
 				system("pause");
 				
 			//---------------------------------- Fim Listando quem o usuario mais velho segue -----------------------------------------------------------
@@ -177,13 +184,14 @@ main(){
 						
 				// ------------------ Comeco da verificacao se o nome a ser pesquisado exite ---------------------	
 				while(existe==0){
-					printf("\n\nDigite o nome do usuario a ser verificado: ");
+					printf("\nDigite o nome do usuario a ser verificado: ");
 					scanf("%s", &nomeListaCadastrados);
 					existe = verificaSeExiste(vetorUsuarios, nomeListaCadastrados);								
 				}
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------	
 				
-				removerUsuario(existe,vetorUsuarios,matrizUsuarios);/* Colocar explicacao */
+				removerUsuario(existe,vetorUsuarios,matrizUsuarios,ptrSegue,ptrSeguido);/* Colocar explicacao */
+				system("pause");
 
 			//---------------------------------- Fim removendo um usuário -----------------------------------------------------------			
 			break;
