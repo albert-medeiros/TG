@@ -34,6 +34,11 @@ typedef struct no{ //struct para armazenar os valores salvos na árvore
 	TipoUsuario user; //chave real
 } TNo;
 
+typedef struct lista{ //struct para armazenar os valores salvos na árvore
+	struct lista *prox; // aponta para o proximo no
+	TipoUsuario user; //chave real
+} TLista;
+
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
 
 
@@ -304,8 +309,18 @@ void pesquisa(TNo *ptr,usuario user){
 //-----------------------------------------------------------------------------------------------------------------> Fim Funcoes usadas exclusivamenetes na Arvore AVL
 
 
+void insereLista (TLista *lista,TipoUsuario user){
+//	Lista->Ultimo->Prox = (TipoApontador) malloc(sizeof(TipoCelula));
+	lista->prox = (TLista*)malloc(sizeof(TLista));
+//	Lista->Ultimo = Lista->Ultimo->Prox;
+//	Lista->Ultimo->Item = user;
+//	Lista->Ultimo->Prox = NULL;
+}
 
-void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido){ 
+
+
+
+void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido,TLista **lstSegue,TLista **lstSeguido){ 
 /*
 i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
 ii. não é necessário oferecer essa opção ao usuário; 
@@ -337,6 +352,13 @@ iii. poderão ser utilizados os índices da lista de 1 a n
 		ptrSeguido[i] = NULL;
 	}
 //-----------------------------------------------------------------------------------------------------------------> Arvore	
+
+	for(int i=0;i<tam;i++){
+		lstSegue[i] = NULL;
+	}
+	for(int i=0;i<tam;i++){
+		lstSeguido[i] = NULL;
+	}
 }
 
 void inserirUsuario(usuario vetorUsuarios[tam]){
@@ -387,7 +409,7 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 	
 }
 
-void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido){
+void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido, TLista **lstSegue){
 /*
 i. insere uma relação de “é seguidor de/seguido por” entre um par de usuários;
 ii. nessa operação de inserção, os usuários deverão estar previamente inseridos na rede; 
@@ -403,6 +425,7 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 	char nomeSeguido[20], nomeSeguidor[20];
 	int coluna=0, linha=0,cont=0;
 	TNo *ptrAux;TNo *ptrAux1;
+	TLista *lstAux;
 	usuario usuariosAux;
 	
 	FILE *seguir = fopen("seguir.txt", "r"); //abertura do arquivo	
@@ -468,6 +491,15 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 		ptrSeguido[coluna] = ptrAux1;
 		
 //-----------------------------------------------------------------------------------------------------------------> Arvore
+
+//-----------------------------------------------------------------------------------------------------------------> comeco lista
+
+		lstAux=lstSegue[linha];
+		usuariosAux = vetorUsuarios[coluna];
+		insereLista(lstAux,usuariosAux);
+		lstSegue[linha] = lstAux;
+
+//-----------------------------------------------------------------------------------------------------------------> comeco lista
 
 	
 		cont=0;		

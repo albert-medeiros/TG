@@ -27,9 +27,10 @@ main(){
 	char nomeListaCadastrados[20];
 	usuario vetorUsuarios[tam], user;
 	TNo *ptrSegue[tam],*ptrSeguido[tam]; //ptrSegue é o vetor que mostra quem o usuário segue e ptrSeguido por quem o usuario é seguido
+	TLista *lstSegue[tam],*lstSeguido[tam];
 	
 	
-	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptrSegue, ptrSeguido);
+	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptrSegue, ptrSeguido,lstSegue,lstSeguido);
 	
 	opcMenu=-1;
 	while(opcMenu != 0){
@@ -51,7 +52,7 @@ main(){
 		
 		switch(opcMenu){
 			case 1:
-				//insere os usuários a serem cadastrados usando o arquivo e depois mostra quantos foram mostrados ( é qntCadastros menos 1 pq comeca em 1)
+				//insere os usuários a serem cadastrados usando o arquivo e depois mostra quantos foram mostrados ( é qntCadastros menos 1 pq comeca em 1)-
 				inserirUsuario(vetorUsuarios); //os usuarios sao inseridos somente no vetorUsuarios pq e com ele que se fara a verificacao das posicoes
 				// que os dados estao inseridos em todas as estruturas implmentadas
 				printf("\n\n\t  - - - - %d usuarios cadastrados - - - -\n\n", qntCadastros-1);
@@ -61,7 +62,7 @@ main(){
 			
 			case 2:
 				
-				inserirRelacao(vetorUsuarios, matrizUsuarios,ptrSegue,ptrSeguido); /* é na insercao de realacao que se preenche as estruturas ( matris de adjacencias
+				inserirRelacao(vetorUsuarios, matrizUsuarios,ptrSegue,ptrSeguido,lstSegue); /* é na insercao de realacao que se preenche as estruturas ( matris de adjacencias
 				lista de adjacencias e arvores. nesse caso oprtou-se por utilizar duas arvores 1 para salvar quem o usuario segue e outra pra quem o usuario é seguido para
 				desta forma ficar mais simmples quando for necessario mostrar o mais velho ou seguidores e seguidos. */
 				
