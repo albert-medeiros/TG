@@ -155,85 +155,6 @@ void insereAVL(TNo **ptr, TipoUsuario user){
 	}
 }
 
-void pesquisa(TNo *ptr,usuario user){
-	int quant=1;
-	while((ptr!= NULL) && (strcmp(ptr->user.nome,user.nome) == 0)){
-		quant++; //A cada ciclo soma 1 para saber o numero de comparações	
-		if(user.idade > ptr->user.idade){ //direção que a chave percorre
-			ptr = ptr->dir;
-		}
-		else{
-			ptr = ptr->esq;
-		}
-	}
-	if(ptr==NULL){
-		printf("-> ninguem :( <-");
-	}
-	else{
-		in_ordem1(ptr, user);
-	}
-}
-
-
-//void pesquisaParaAtualizar(TNo *ptr[tam],TNo *ptrSeguido[tam],usuario user,int existe,int existe1){
-//	int quant=1,opc=0,opc1=0;
-//	TNo *ptrAux;TNo *ptrAux1;
-//	
-//	
-//	while((ptr!= NULL)&&(strcmp(ptr->user.nome,user.nome) == 0)){
-//		quant++; //A cada ciclo soma 1 para saber o numero de comparações	
-//		if(user.idade > ptr->user.idade){ //direção que a chave percorre
-//			ptr = ptr->dir;
-//		}
-//		else{
-//			ptr = ptr->esq;
-//		}
-//	}
-//	if(ptr==NULL){
-//		printf("Os usuarios nao se seguem, Deseja inserir essa nova relacao? 1-Sim 2-Nao");
-//		scanf("%d",&opc);
-//		if(opc == 1){
-//			ptrAux = ptr[existe];
-//			usuariosAux = vetorUsuarios[existe1];		
-//			insereAVL(&ptrAux,usuariosAux);
-//			ptr[existe] = ptrAux;
-//			
-//			ptrAux1 = ptrSeguido[existe1];
-//			usuariosAux = vetorUsuarios[existe];		
-//			insereAVL(&ptrAux1,usuariosAux);
-//			ptrSeguido[existe1] = ptrAux1;
-//			
-//		}
-//	}
-//	else{
-//		printf("Os usuarios se seguem, Deseja remover essa  relacao? 1-Sim 2-Nao");
-//		scanf("%d",&opc1);
-//		if(opc1 == 1){
-//			ptrAux = ptr[existe];
-//			retiraAVL(&ptrAux,vetorUsuarios[existe1]);
-//			ptr[existe]=ptrAux;
-//			
-//			ptrAux = ptrSeguido[existe1];
-//			retiraAVL(&ptrAux,vetorUsuarios[existe]);
-//			ptrSeguido[existe1]=ptrAux;				
-//		}
-//	}
-//}
-
-//void antecessor(TNo *q,TNo **r){
-//	if((*r)->dir != NULL){ //recursivamente para ir no último na direita DA ESQUERDA
-//		antecessor(q,&(*r)->dir);
-//	}
-//	else{ //faz a troca e apaga o nó 
-//		q->user = (*r)->user; //copia do antecessor pro lugar da chave apagada
-//		q = (*r); //posição da chave
-//		
-//		(*r) = (*r)->esq; //passa a chave esquerda para o nó	
-//		
-//		free(q); //apaga o nó 
-//	}
-//}
-
 void sucessor(TNo *q,TNo **r){
 	if((*r)->esq != NULL){  //recursivamente para ir no último da esquerda
 		sucessor(q,&(*r)->esq);
@@ -313,6 +234,71 @@ void retiraAVL(TNo **ptr, usuario user){
 	
 //	printf("\n\nVai verificar aqui nesse negocio:\n");in_ordem(ptr);
 }
+
+
+void pesquisa(TNo *ptr,usuario user){
+	int quant=1;
+	while((ptr!= NULL) && (strcmp(ptr->user.nome,user.nome) == 0)){
+		quant++; //A cada ciclo soma 1 para saber o numero de comparações	
+		if(user.idade > ptr->user.idade){ //direção que a chave percorre
+			ptr = ptr->dir;
+		}
+		else{
+			ptr = ptr->esq;
+		}
+	}
+	if(ptr==NULL){
+		printf("-> ninguem :( <-");
+	}
+	else{
+		in_ordem1(ptr, user);
+	}
+}
+
+
+//void pesquisaParaAtualizar(TNo *ptr,TNo *ptrSeguido,usuario vetorUsuarios[tam],int existe,int existe1){
+//	int quant=1,opc=0,opc1=0;
+//	TNo *ptrAux;TNo *ptrAux1;
+//	usuario usuariosAux;
+//	
+//	
+//	while((ptr!= NULL)&&(strcmp(ptr->user.nome,vetorUsuarios[existe1].nome) != 0)){
+//		quant++; //A cada ciclo soma 1 para saber o numero de comparações	
+//		if(vetorUsuarios[existe1].idade > ptr->user.idade){ //direção que a chave percorre
+//			ptr = ptr->dir;
+//		}
+//		else{
+//			ptr = ptr->esq;
+//		}
+//	}
+//	if(ptr==NULL){
+//		usuariosAux = vetorUsuarios[existe1];		
+//		insereAVL(&ptrAux,usuariosAux);
+//		
+//		usuariosAux = vetorUsuarios[existe];		
+//		insereAVL(&ptrAux1,usuariosAux);
+//	}
+//	else{
+//		retiraAVL(&ptrAux,vetorUsuarios[existe1]);
+//		retiraAVL(&ptrAux1,vetorUsuarios[existe]);
+//		
+//	}
+//}
+
+//void antecessor(TNo *q,TNo **r){
+//	if((*r)->dir != NULL){ //recursivamente para ir no último na direita DA ESQUERDA
+//		antecessor(q,&(*r)->dir);
+//	}
+//	else{ //faz a troca e apaga o nó 
+//		q->user = (*r)->user; //copia do antecessor pro lugar da chave apagada
+//		q = (*r); //posição da chave
+//		
+//		(*r) = (*r)->esq; //passa a chave esquerda para o nó	
+//		
+//		free(q); //apaga o nó 
+//	}
+//}
+
 
 	
 //-----------------------------------------------------------------------------------------------------------------> Fim Funcoes usadas exclusivamenetes na Arvore AVL
@@ -624,26 +610,54 @@ i. ocorre similarmente à inserção de relações, porém a relação deverá estar prev
 ii. caso a relação não esteja inserida deve-se oferecer essa opção ao usuário do programa.
 */
 	int confirmacao=0,confirmacao1=0;
+	usuario usuariosAux;
 	TNo *ptrAux,*ptrAux1;
 
 	printf("\nVoce relamente deseja atualizar a relacao entre %s e %s? 1-sim 2-nao\n",vetorUsuarios[existe].nome,vetorUsuarios[existe1].nome);
-	scanf("%s",&confirmacao);
+	scanf("%d",&confirmacao);
 	if(confirmacao == 1){
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios				
 		if(matrizUsuarios[existe][existe1] == 0){
 			printf("\n\tO usuario %s nao seguia o usuario %s deseja que comece a seguir? 1-sim 2-nao ",vetorUsuarios[existe].nome,vetorUsuarios[existe1].nome);
-			scanf("%s",&confirmacao1);
+			scanf("%d",&confirmacao1);
+			
 			if(confirmacao1 == 1){
 				matrizUsuarios[existe][existe1] = 1;
+				
+				ptrAux = ptr[existe];				
+				usuariosAux = vetorUsuarios[existe1];		
+				insereAVL(&ptrAux,usuariosAux);
+				ptr[existe] = ptrAux;
+				
+				ptrAux = ptrSeguido[existe1];				
+				usuariosAux = vetorUsuarios[existe];		
+				insereAVL(&ptrAux,usuariosAux);
+				ptrSeguido[existe1] = ptrAux;
+//				
+//				pesquisaParaAtualizar(ptrAux,ptrAux1, vetorUsuarios,existe,existe1);
+//				ptr[existe]=ptrAux;
 			}
 		}
 		else{
-			matrizUsuarios[existe][existe1] = 0;
+			printf("\n\tO usuario %s ja seguia o usuario %s deseja que pare a seguir? 1-sim 2-nao ",vetorUsuarios[existe].nome,vetorUsuarios[existe1].nome);
+			scanf("%d",&confirmacao1);
+			
+			if(confirmacao1 == 1){
+				matrizUsuarios[existe][existe1] = 0;
+				
+				ptrAux = ptr[existe];
+				retiraAVL(&ptrAux,vetorUsuarios[existe1]);
+				ptr[existe]=ptrAux;
+				
+				ptrAux = ptrSeguido[existe1];
+				retiraAVL(&ptrAux,vetorUsuarios[existe]);
+				ptrSeguido[existe1]=ptrAux;
+				
+				
+			}
 		}
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
-		ptrAux = ptr[existe];
-//		pesquisaParaAtualizar(ptrAux, user,existe,existe1);
-		ptr[existe]=ptrAux;
+		
 	}
 }
 
