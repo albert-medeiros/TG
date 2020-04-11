@@ -186,10 +186,23 @@ void antecessor(TNo *q,TNo **r){
 	}
 }
 
+void sucessor(TNo *q,TNo **r){
+	if((*r)->esq != NULL){  //recursivamente para ir no último da esquerda
+		sucessor(q,&(*r)->esq);
+	}
+	else{ //faz a troca e apaga o nó 
+		q->user = (*r)->user;	//aluno recebe os dados dos da struct r
+		q = (*r); //posição da chave
+		(*r) = (*r)->dir; //passa a chave dir para o nó
+		free(q);
+	}
+}
+
+
 void retiraAVL(TNo **ptr, usuario user){
 	int FB,fb;
 	if((*ptr)==NULL){ //verifica se o valor está na árvore
-		printf("\n O usuario nao esta na arvore!\n");
+		printf("\n O usuario %s nao esta na arvore!\n",user.nome);
 	}
 	
 	else if(user.idade<=(*ptr)->user.idade && (strcmp((*ptr)->user.nome,user.nome) != 0)){ //verifica o lado que tem que seguir 
@@ -198,7 +211,7 @@ void retiraAVL(TNo **ptr, usuario user){
 	else if(user.idade>(*ptr)->user.idade){
 		retiraAVL(&(*ptr)->dir,user);
 	}
-	else{ //caso for a user.idade retirada
+	else if(strcmp((*ptr)->user.nome,user.nome) != 0){ //caso for a chave retirada
 		TNo *aux = *ptr;	//copia o calor a ser retirado 
 		if((*ptr)->dir == NULL){	//se a direita for NULL esq fica no lugar 
 			(*ptr)=(*ptr)->esq;
@@ -208,8 +221,16 @@ void retiraAVL(TNo **ptr, usuario user){
 			(*ptr)=(*ptr)->dir;
 			free(aux);
 		}
+		else if((*ptr)->esq==NULL && (*ptr)->dir==NULL){
+			free(aux);free(ptr);
+		}
 		else{ // caso haja dois filhos
-				antecessor((*ptr),&(*ptr)->esq);
+//			if(sor == 1){
+				sucessor((*ptr),&(*ptr)->dir);
+			
+//			else{
+//				antecessor((*ptr),&(*ptr)->esq);
+//			}
 		}
 	}
 	
@@ -241,6 +262,8 @@ void retiraAVL(TNo **ptr, usuario user){
 			}	
 		}
 	}
+	
+//	printf("\n\nVai verificar aqui nesse negocio:\n");in_ordem(ptr);
 }
 
 	
@@ -573,7 +596,7 @@ ii. caso a relação não esteja inserida deve-se oferecer essa opção ao usuário do
 	}
 }
 
-void removerUsuario(int existe, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo *ptr[tam],TNo *ptrSeguido[tam]){
+void removerUsuario(int existe, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido){
 /* 
 i. remove um usuário previamente cadastrado na rede social, inclusive, com todas as suas relações; 
 ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
@@ -589,21 +612,6 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 	if(confirmacao == 1){
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios				
 		strcpy(aux,vetorUsuarios[existe].nome);
-
-//---------------------------- Comeco Removendo do vetor ------------------	
-		for(int i=existe;i<qntCadastros;i++){
-			vetorUsuarios[i] = vetorUsuarios[i+1];
-		}
-		
-//---------------------------- Fim Removendo do vetor ------------------
-printf("\n");
-for(int i=1;i<qntCadastros;i++){
-	for(int j=1;j<qntCadastros;j++){
-		printf("[%d]",matrizUsuarios[i][j]);
-	}
-	printf("\n");
-}
-
 //---------------------------- Comeco Removendo da matriz ------------------		
 	for(int i=0;i<qntCadastros;i++){
 		for(int j=existe;j<qntCadastros;j++){
@@ -617,31 +625,46 @@ for(int i=1;i<qntCadastros;i++){
 		}
 	}
 
-
-//		for(int i=0;i<qntCadastros;i++){ //copia a linha do de baixo pra posicao a ser retirada
-
-//		}
-//		for(int i=0;i<qntCadastros;i++){ //copia a coluna do do lado pra posicao que foi retirada
-//			matrizUsuarios[i][existe] = matrizUsuarios[i][existe+1];
-//		}
 //---------------------------- Fim Removendo da matriz ------------------
-printf("\n\n\n\n________________________\n\n\n\n");
-for(int i=1;i<qntCadastros;i++){
-	for(int j=1;j<qntCadastros;j++){
-		printf("[%d]",matrizUsuarios[i][j]);
-	}
-	printf("\n");
-}
+//printf("\n\n\n\n________________________\n\n\n\n");
+//for(int i=1;i<qntCadastros;i++){
+//	for(int j=1;j<qntCadastros;j++){
+//		printf("[%d]",matrizUsuarios[i][j]);
+//	}
+//	printf("\n");
+//}
 
 
 //---------------------------- Comeco Removendo da arvore ------------------
+
+	/* a intenção para a remocao da arvore AVl  é pasar por todas a celulas removendo o no que está o valor removido, isso tanto na arvore que reseva os seguidores
+	quanto para a arvore que estao armazenados os seguidos */
 	
 	for(int i=existe;i<qntCadastros;i++){
 		ptr[i] = ptr[i+1];
 		ptrSeguido[i] = ptrSeguido[i+1];
 	}
 
-//---------------------------- Comeco Removendo da arvore ------------------				
+	for(int i=1;i<qntCadastros;i++){
+		ptrAux = ptr[i];
+		printf("\n\nVai verificar aqui:\n");in_ordem(ptrAux);
+		retiraAVL(&ptrAux,vetorUsuarios[existe]);
+		printf("\n\nVai verificar aqui-> \n");in_ordem(ptrAux);
+		
+		ptr[i]=ptrAux;
+	}
+	
+//---------------------------- Fim Removendo da arvore ------------------				
+
+
+
+//---------------------------- Comeco Removendo do vetor ------------------	
+		for(int i=existe;i<qntCadastros;i++){
+			vetorUsuarios[i] = vetorUsuarios[i+1];
+		}
+		
+//---------------------------- Fim Removendo do vetor ------------------
+		
 		qntCadastros--;
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios				
 		
