@@ -211,17 +211,17 @@ main(){
 								
 				// ------------------ Comeco da verificacao se o nome a ser pesquisado exite ---------------------	
 				while(existe==0||existe1==0){
-					printf("\n\nDigite o nome do usuario que vai comecar de seguir: ");
+					printf("\n\nDigite o nome do usuario que vai parar de seguir: ");
 					scanf("%s", &nomeListaCadastrados);
 					existe = verificaSeExiste(vetorUsuarios, nomeListaCadastrados);												
 				
-					printf("\n\nDigite o nome do usuario que vai parar ou comecar ser seguido: ");
+					printf("\n\nDigite o nome do usuario que vai parar de ser seguido: ");
 					scanf("%s", &nomeListaCadastrados);
 					existe1 = verificaSeExiste(vetorUsuarios, nomeListaCadastrados);		
 				}
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------	
 				
-				removerRelacao(existe,existe1,vetorUsuarios,matrizUsuarios);/* Colocar explicacao */				
+				removerRelacao(existe,existe1,vetorUsuarios,matrizUsuarios,ptrSegue,ptrSeguido);/* Colocar explicacao */				
 				
 				//---------------------------------- Fim removendo uma relacao -----------------------------------------------------------
 			break;

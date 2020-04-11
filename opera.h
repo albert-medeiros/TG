@@ -211,7 +211,7 @@ void retiraAVL(TNo **ptr, usuario user){
 	else if(user.idade>(*ptr)->user.idade){
 		retiraAVL(&(*ptr)->dir,user);
 	}
-	else if(strcmp((*ptr)->user.nome,user.nome) != 0){ //caso for a chave retirada
+	else if(strcmp((*ptr)->user.nome,user.nome) == 0){ //caso for a chave retirada
 		TNo *aux = *ptr;	//copia o calor a ser retirado 
 		if((*ptr)->dir == NULL){	//se a direita for NULL esq fica no lugar 
 			(*ptr)=(*ptr)->esq;
@@ -570,7 +570,7 @@ void listarSeguidoresVelhos(int existe,usuario vetorUsuarios[tam],int matrizUsua
 
 }
 
-void atualizarRelacao(int existe, int existe1, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){
+void atualizarRelacao(int existe, int existe1, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido){
 /*
 i. ocorre similarmente à inserção de relações, porém a relação deverá estar previamente inserida. 
 ii. caso a relação não esteja inserida deve-se oferecer essa opção ao usuário do programa.
@@ -647,11 +647,14 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 
 	for(int i=1;i<qntCadastros;i++){
 		ptrAux = ptr[i];
-		printf("\n\nVai verificar aqui:\n");in_ordem(ptrAux);
 		retiraAVL(&ptrAux,vetorUsuarios[existe]);
-		printf("\n\nVai verificar aqui-> \n");in_ordem(ptrAux);
-		
 		ptr[i]=ptrAux;
+	}
+	
+	for(int i=1;i<qntCadastros;i++){
+		ptrAux = ptrSeguido[i];
+		retiraAVL(&ptrAux,vetorUsuarios[existe]);
+		ptrSeguido[i]=ptrAux;
 	}
 	
 //---------------------------- Fim Removendo da arvore ------------------				
@@ -673,12 +676,12 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 
 }
 
-void removerRelacao(int existe,int existe1, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam]){
+void removerRelacao(int existe,int existe1, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido){
 /*
 i. remove uma relação previamente cadastrada na rede social; 
 ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja inserido, exibir uma mensagem de erro.
 */	
-	
+	TNo *ptrAux;
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios			
 	if(matrizUsuarios[existe][existe1] == 0){
 		printf("\n\n\tO usuario %s ja nao seguia o usuario %s", vetorUsuarios[existe].nome, vetorUsuarios[existe1].nome);
@@ -687,6 +690,17 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 		matrizUsuarios[existe][existe1] = 0;
 	}
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
+
+
+//	printf("removendo essa relacao aqui oh %s -> %s",vetorUsuarios[existe],vetorUsuarios[existe1]);
+
+		ptrAux = ptr[existe];
+		retiraAVL(&ptrAux,vetorUsuarios[existe1]);
+		ptr[existe]=ptrAux;
+		
+		ptrAux = ptrSeguido[existe1];
+		retiraAVL(&ptrAux,vetorUsuarios[existe]);
+		ptrSeguido[existe1]=ptrAux;
 
 }
 
