@@ -27,10 +27,10 @@ main(){
 	char nomeListaCadastrados[20];
 	usuario vetorUsuarios[tam], user;
 	TNo *ptrSegue[tam],*ptrSeguido[tam]; //ptrSegue é o vetor que mostra quem o usuário segue e ptrSeguido por quem o usuario é seguido
-	TLista *lstSegue[tam],*lstSeguido[tam];
+	TipoLista listaSegue[tam],listaSeguido[tam];
 	
 	
-	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptrSegue, ptrSeguido,lstSegue,lstSeguido);
+	inicializaGrafos(vetorUsuarios, matrizUsuarios, ptrSegue, ptrSeguido,listaSegue,listaSeguido);
 	
 	opcMenu=-1;
 	while(opcMenu != 0){
@@ -62,7 +62,7 @@ main(){
 			
 			case 2:
 				
-				inserirRelacao(vetorUsuarios, matrizUsuarios,ptrSegue,ptrSeguido,lstSegue); /* é na insercao de realacao que se preenche as estruturas ( matris de adjacencias
+				inserirRelacao(vetorUsuarios, matrizUsuarios,ptrSegue,ptrSeguido,listaSegue,listaSeguido); /* é na insercao de realacao que se preenche as estruturas ( matris de adjacencias
 				lista de adjacencias e arvores. nesse caso oprtou-se por utilizar duas arvores 1 para salvar quem o usuario segue e outra pra quem o usuario é seguido para
 				desta forma ficar mais simmples quando for necessario mostrar o mais velho ou seguidores e seguidos. */
 				
@@ -102,9 +102,10 @@ main(){
 						system("pause");
 					}	
 				}
-				// ------------------ Fim da verificacao em qual estrutura será mostrado a seguencia de seguidores e seguidos ---------------------									
+				// ------------------ Fim da verificacao em qual estrutura será mostrado a seguencia de seguidores e seguidos ---------------------
+				//printf("\t\t\t %s\n",lstSegue[1]->ultimo->user.nome);								
 					
-				listarSeguidores(existe,vetorUsuarios,matrizUsuarios,modo,ptrSegue,ptrSeguido); /* chama a função resposavel por listar os seguidores, para ela é passada
+				listarSeguidores(existe,vetorUsuarios,matrizUsuarios,modo,ptrSegue,ptrSeguido,listaSegue,listaSeguido); /* chama a função resposavel por listar os seguidores, para ela é passada
 				a posicao em que o nome esta no vetor (exite), o vetor auxiliar onde estão inseridos os usuario (vetorUsuarios), a matriz de adjacencias
 				(matrizUsuarios), em qual estrutura será mostrada (modo), vetor de arvores (ptrSegue) */
 				system("pause");

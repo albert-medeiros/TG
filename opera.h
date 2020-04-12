@@ -18,6 +18,7 @@
 #define tam 51
 
 #define ALOCA (TNo*)malloc(sizeof(TNo))
+#define ALOCA1 (TLista*)malloc(sizeof(TLista))
 
 //variavel global para contagem de linha da matriz de pesos
 int qntCadastros=1;
@@ -38,6 +39,10 @@ typedef struct lista{ //struct para armazenar os valores salvos na árvore
 	struct lista *prox; // aponta para o proximo no
 	TipoUsuario user; //chave real
 } TLista;
+
+struct TipoLista{
+	lista *primeiro,*ultimo ;
+}; 
 
 //----------------------------------------------------------------------- STRUCT / INICIALIZA ------------------------------------------------------------------------------------
 
@@ -309,23 +314,51 @@ void pesquisa(TNo *ptr,usuario user){
 //-----------------------------------------------------------------------------------------------------------------> Fim Funcoes usadas exclusivamenetes na Arvore AVL
 
 
-void insereLista (TLista *lista,TipoUsuario user){
-//	Lista->Ultimo->Prox = (TipoApontador) malloc(sizeof(TipoCelula));
-	lista->prox = (TLista*)malloc(sizeof(TLista));
-//	Lista->Ultimo = Lista->Ultimo->Prox;
-//	Lista->Ultimo->Item = user;
-//	Lista->Ultimo->Prox = NULL;
+//void insereLista(TLista *lista,TipoUsuario user){
+//	lista->
+//
+//}
+void insereLista(TipoUsuario user, TipoLista *Lista){
+	Lista->ultimo->prox = ALOCA1;
+	Lista->ultimo = Lista->ultimo->prox;
+	Lista->ultimo->user = user;
+	Lista->ultimo->prox = NULL;
+}
+//
+//void imprimeLista(TLista *lista){
+//	TLista *Aux;
+//	Aux = lista->primeiro;
+//	while (Aux != NULL){
+//		printf("\t\t %s \n", Aux->ultimo->user.nome);
+//		Aux = Aux->prox;
+//	}
+//	
+//}
+
+void imprimeLista(TipoLista list){
+	TLista *Aux;
+	Aux = list.primeiro->prox;
+	while (Aux != NULL){
+		printf("\t\t\t %s \n", Aux->user.nome);
+		Aux = Aux->prox;
+	}
+	
+}
+
+void FLVazia(TipoLista *lista){
+	lista->primeiro = ALOCA1;
+	lista->ultimo = lista->primeiro ;
+	lista->primeiro->prox = NULL;
 }
 
 
-
-
-void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido,TLista **lstSegue,TLista **lstSeguido){ 
+void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr , TNo **ptrSeguido , TipoLista listaSegue[tam] , TipoLista listaSeguido[tam]){ 
 /*
 i. preenche a matriz de pesos com zeros, aloca uma posição de memória (posição 0) para as listas de adjacência e adjacência em AVL e faz com o que seus conteúdos apontem para NULL; 
 ii. não é necessário oferecer essa opção ao usuário; 
 iii. poderão ser utilizados os índices da lista de 1 a n
 */
+	TipoLista listaAux;
 
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios	
 	printf("\n\n\t -> Inicializando o Grafo: \n");
@@ -353,12 +386,36 @@ iii. poderão ser utilizados os índices da lista de 1 a n
 	}
 //-----------------------------------------------------------------------------------------------------------------> Arvore	
 
+//	for(int i=0;i<tam;i++){
+//		lstSegue[i] = ALOCA1;
+//		lstSegue[i]->primeiro = ALOCA1;
+//		lstSegue[i]->ultimo = lstSegue[i]->primeiro ;		
+//		lstSegue[i]->primeiro->prox = NULL;	
+//	}
+//	for(int i=0;i<tam;i++){
+////		lstSeguido[i] = ALOCA1;
+////		lstSeguido[i]->primeiro = ALOCA1;
+////		lstSeguido[i]->ultimo = lstSeguido[i]->primeiro ;
+////		lstSeguido[i]->primeiro->prox = NULL;
+//		lstSeguido[i] = ALOCA1;
+//		lstSeguido[i]->primeiro = ALOCA1;
+//		lstSeguido[i]->ultimo = lstSeguido[i]->primeiro ;		
+//		lstSeguido[i]->primeiro->prox = NULL;	
+//	}
+	
 	for(int i=0;i<tam;i++){
-		lstSegue[i] = NULL;
+		listaAux = listaSegue[i];
+		FLVazia(&listaAux);
+		listaSegue[i] = listaAux;
 	}
+	
 	for(int i=0;i<tam;i++){
-		lstSeguido[i] = NULL;
+		listaAux = listaSeguido[i];
+		FLVazia(&listaAux);
+		listaSeguido[i] = listaAux;
 	}
+	
+	
 }
 
 void inserirUsuario(usuario vetorUsuarios[tam]){
@@ -409,7 +466,7 @@ ii. o programa deverá verificar se o usuário já está inserido e, caso positivo, 
 	
 }
 
-void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido, TLista **lstSegue){
+void inserirRelacao(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr,TNo **ptrSeguido, TipoLista listaSegue[tam],TipoLista listaSeguido[tam]){
 /*
 i. insere uma relação de “é seguidor de/seguido por” entre um par de usuários;
 ii. nessa operação de inserção, os usuários deverão estar previamente inseridos na rede; 
@@ -425,7 +482,7 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 	char nomeSeguido[20], nomeSeguidor[20];
 	int coluna=0, linha=0,cont=0;
 	TNo *ptrAux;TNo *ptrAux1;
-	TLista *lstAux;
+	TipoLista lstAux, lstAux1;
 	usuario usuariosAux;
 	
 	FILE *seguir = fopen("seguir.txt", "r"); //abertura do arquivo	
@@ -494,10 +551,16 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 
 //-----------------------------------------------------------------------------------------------------------------> comeco lista
 
-		lstAux=lstSegue[linha];
+		lstAux=listaSegue[linha];
 		usuariosAux = vetorUsuarios[coluna];
-		insereLista(lstAux,usuariosAux);
-		lstSegue[linha] = lstAux;
+		insereLista(usuariosAux,&lstAux);
+		listaSegue[linha] = lstAux;
+		
+		lstAux=listaSeguido[coluna];
+		usuariosAux = vetorUsuarios[linha];
+		insereLista(usuariosAux,&lstAux);
+		listaSeguido[coluna] = lstAux;
+		//printf("AAAAAAAAAAA -> lst: %s",lstSegue[linha]->ultimo->user.nome);
 
 //-----------------------------------------------------------------------------------------------------------------> comeco lista
 
@@ -506,7 +569,7 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 	}
 }
 
-void listarSeguidores(int existe, usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],int modo,TNo *ptr[tam],TNo *ptrSeguido[tam]){
+void listarSeguidores(int existe, usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],int modo,TNo *ptr[tam],TNo *ptrSeguido[tam],TipoLista listaSegue[tam],TipoLista listaSeguido[tam]){
 /*
 i.após o usuário do programa escolher um usuário cadastrado x, esta opção deverá listar todos os usuários os quais x segue e por quais usuários x é seguido,
   inclusive com os tempos relacionados à cada relação existente; 
@@ -516,12 +579,13 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 
 	int segue=0,eSeguido=0;
 	TNo *ptrAux,*ptrAux1;
+	TipoLista lstAux,lstAux1;
 	usuario usuariosAux;
 	
 	switch(modo){
 //-----------------------------------------------------------------------------------------------------------------> Comeco Matriz de pessos/vetor de usuarios				
 		case 1:
-			printf("\n\n\n -------------------- Matriz de Pesos ----------------------- ");
+			printf("\n\n\n -------------------- Matriz de Pesos ----------------------- \n\n");
 			printf("\n\tO usuario Segue:\n"); 
 			for(int i=1;i<qntCadastros;i++){ //percorre toda a linha da matriz mostrando todos os usuarios que sao seguidos por esse usuário
 				if(matrizUsuarios[existe][i] == 1){
@@ -546,14 +610,32 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 			}
 			
 			
-			printf(" -------------------- Matriz de Pesos ----------------------- \n\n");
+			printf("\n\n -------------------- Matriz de Pesos ----------------------- \n\n");
 		break;
 //-----------------------------------------------------------------------------------------------------------------> Fim Matriz de pessos/vetor de usuarios				
 
 //-----------------------------------------------------------------------------------------------------------------> Comeco listagem na lista de adjacencias	
 		case 2:
-			printf("\n\n\n -------------------- lista de adjacencias ----------------------- ");
 			printf("\n\n\n -------------------- lista de adjacencias ----------------------- \n\n");
+			printf("\n\tO usuario Segue:\n");
+			lstAux = listaSegue[existe];
+			if(lstAux.primeiro != NULL){
+				imprimeLista(lstAux);
+			}
+			else{
+				printf("\t\t\t O usuario nao segue ninguem!\n");
+			}
+			
+			printf("\n\tO usuario eh seguido:\n");
+			lstAux1 = listaSeguido[existe];
+			if(lstAux1.primeiro != NULL){
+				imprimeLista(lstAux1);
+			}
+			else{
+				printf("\t\t\t O usuario nao segue ninguem!\n");
+			}
+			
+			printf("\n\n -------------------- lista de adjacencias ----------------------- \n\n");
 		
 		break;
 //-----------------------------------------------------------------------------------------------------------------> Fim listagem na lista de adjacencias		
