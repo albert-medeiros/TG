@@ -345,6 +345,17 @@ void imprimeLista(TipoLista list){
 	
 }
 
+void imprimeLista1(TipoLista list,usuario user){
+	TLista *Aux;
+	Aux = list.primeiro->prox;
+	while (Aux != NULL){
+		if(Aux->user.idade>user.idade){
+			printf("\t\t %s - %d anos\n", vetorUsuarios[i].nome, vetorUsuarios[i].idade);
+		}	
+		Aux = Aux->prox;
+	}
+}
+
 void FLVazia(TipoLista *lista){
 	lista->primeiro = ALOCA1;
 	lista->ultimo = lista->primeiro ;
@@ -670,10 +681,11 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 	}
 }
 
-void listarSeguidoresVelhos(int existe,usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],TNo *ptr[tam]){
+void listarSeguidoresVelhos(int existe,usuario vetorUsuarios[tam],int matrizUsuarios[tam][tam],TNo *ptr[tam],TipoLista listaSegue[tam]){
 //i. lista todos os usuários que são seguidos por usuários mais velhos, inclusive com os quantitativos associados a cada um deles.
 	int segue=0,eSeguido=0;
 	TNo *ptrAux;
+	TipoLista lstAux,lstAux1;
 	
 //-----------------------------------------------------------------------------------------------------------------> Comeco Matriz de pessos/vetor de usuarios			
 	printf("\n\n\n -------------------- Matriz de Pesos ----------------------- \n\n");
@@ -697,6 +709,21 @@ void listarSeguidoresVelhos(int existe,usuario vetorUsuarios[tam],int matrizUsua
 	
 	printf("\n\n -------------------- Matriz de Pesos ----------------------- \n\n");
 //-----------------------------------------------------------------------------------------------------------------> Fim Matriz de pessos/vetor de usuarios			
+
+//-----------------------------------------------------------------------------------------------------------------> Comeco listagem na lista de mais velhos na Arvore AVL
+	printf("\n\n\n -------------------- lista de adjacencias ----------------------- \n\n");
+	printf("\n\t%s com %d ano(s) segue:\n\n", vetorUsuarios[existe].nome, vetorUsuarios[existe].idade);
+	lstAux=listaSegue[existe];
+	if(lstAux.primeiro != NULL){
+		imprimeLista1(lstAux,vetorUsuarios[existe]);	
+	}
+	else{
+		printf("-> ninguem :( :( :() <-");
+	}
+	
+	
+	printf("\n\n-------------------- lista de adjacencias ----------------------- \n\n");
+//-----------------------------------------------------------------------------------------------------------------> Fim listagem na lista de mais velhos na Arvore AVL
 	
 
 //-----------------------------------------------------------------------------------------------------------------> Comeco listagem na lista de mais velhos na Arvore AVL

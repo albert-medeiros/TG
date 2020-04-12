@@ -134,7 +134,7 @@ main(){
 				}
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------	
 				
-				listarSeguidoresVelhos(existe,vetorUsuarios,matrizUsuarios,ptrSegue); /* Colocar explicacao */				
+				listarSeguidoresVelhos(existe,vetorUsuarios,matrizUsuarios,ptrSegue,listaSegue); /* Colocar explicacao */				
 				system("pause");
 				
 			//---------------------------------- Fim Listando quem o usuario mais velho segue -----------------------------------------------------------
