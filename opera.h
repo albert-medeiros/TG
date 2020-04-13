@@ -181,7 +181,7 @@ void sucessor(TNo *q,TNo **r){
 void retiraAVL(TNo **ptr, usuario user){
 	int FB,fb;
 	if((*ptr)==NULL){ //verifica se o valor está na árvore
-		printf("\n O usuario %s nao esta na arvore!\n",user.nome);
+		//printf("\n O usuario %s nao esta na arvore!\n",user.nome);
 	}
 	
 	else if(user.idade<=(*ptr)->user.idade && (strcmp((*ptr)->user.nome,user.nome) != 0)){ //verifica o lado que tem que seguir 
@@ -339,59 +339,77 @@ void insereLista(TipoUsuario user, TipoLista *Lista){
 }
 
 void removeLista(TipoUsuario user, TipoLista *list){
+	
 
 	TLista *auxComeco,*auxFim,*posicao1,*posicao2;
 	TLista vetorLista[tam];
-	TipoLista *listaAux = list,listaFinal;
+	TipoLista *listaAux = list,listaFinal,*listaVerificacao=list;
 	usuario usuariosAux;
 	TipoLista lstAux, lstAux1;
-	
 	auxComeco = list->primeiro;
 	auxFim = list->ultimo;
-	int cont=1,posicaoRemover,i=0;
+	
+	
+	int cont=1,posicaoRemover=-1,i=0,flag=0;
+	printf("\t -----------------------");
+	
 	
 
 	if(auxComeco->prox == auxFim){ //se só tem um usuario seguindo ou sendo seguido ele zera a lista novamente, o ultimo e o primero apontam pro mesmo lugar
+		printf("entrou aqui 1");
 		list->ultimo = list->primeiro;
 		list->primeiro->prox = NULL;
+		
 	}
 
 	else if(strcmp(auxComeco->prox->user.nome,user.nome) == 0){
+		printf("entrou aqui 2");
 		list->primeiro->prox=list->primeiro->prox->prox;
+		
 	}
 
 	else{ //se não for o primeiro nem o ultimo entra aqui 
+		printf("entrou aqui 3");
+		while(strcmp(auxComeco->prox->user.nome,listaAux->ultimo->user.nome) !=0 ){
+			if(strcmp(listaVerificacao->primeiro->user.nome,user.nome)==0){
+				flag=1;
+				break;;
+			}
+		}
+				
+		if(flag==1){
+				FLVazia(&listaFinal);
+			while(auxComeco!=NULL){//strcmp(auxComeco->prox->user.nome,list->ultimo->user.nome)!=0){
+			printf("a -");
+				
+				vetorLista[i].prox = auxComeco->prox->prox;
+				vetorLista[i].user = auxComeco->prox->user;
+							
+				if(strcmp(auxComeco->prox->user.nome,user.nome)==0){
+					posicaoRemover=cont;
+				}
+				
+				if(strcmp(auxComeco->prox->user.nome,listaAux->ultimo->user.nome)==0){
+					break;
+				}
+				
+				cont= cont+1;
 	
-		FLVazia(&listaFinal);
-		while(auxComeco!=NULL){//strcmp(auxComeco->prox->user.nome,list->ultimo->user.nome)!=0){
-			
-			vetorLista[i].prox = auxComeco->prox->prox;
-			vetorLista[i].user = auxComeco->prox->user;
-						
-			if(strcmp(auxComeco->prox->user.nome,user.nome)==0){
-				posicaoRemover=cont;
+				auxComeco->prox = auxComeco->prox->prox;			
+				i++;
 			}
-			
-			if(strcmp(auxComeco->prox->user.nome,listaAux->ultimo->user.nome)==0){
-				break;
+	
+			if(posicaoRemover != -1){
+				for(int i=0;i<cont;i++){
+					usuariosAux = vetorLista[i].user;
+					if(i != posicaoRemover-1){
+						insereLista(usuariosAux,&listaFinal);	
+					}
+				}
+				list->primeiro = listaFinal.primeiro;	
 			}
-			
-			cont= cont+1;
-
-			auxComeco->prox = auxComeco->prox->prox;			
-			i++;
-		}
-
-		
-		for(int i=0;i<cont;i++){
-			usuariosAux = vetorLista[i].user;
-			if(i != posicaoRemover-1){
-				insereLista(usuariosAux,&listaFinal);	
-			}
-		}
-		list->primeiro = listaFinal.primeiro;			
+		}					
 	}
-
 }
 
 
@@ -849,7 +867,7 @@ ii. caso a relação não esteja inserida deve-se oferecer essa opção ao usuário do
 	}
 }
 
-void removerUsuario(int existe, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido,,TipoLista listaSegue[tam],TipoLista listaSeguido[tam]){
+void removerUsuario(int existe, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido,TipoLista listaSegue[tam],TipoLista listaSeguido[tam]){
 /* 
 i. remove um usuário previamente cadastrado na rede social, inclusive, com todas as suas relações; 
 ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
@@ -914,9 +932,28 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 	
 //---------------------------- Fim Removendo da arvore ------------------	
 
-//---------------------------- Comeco Removendo da lista ------------------			
-
-
+//---------------------------- Comeco Removendo da lista ------------------	
+	for(int i=existe;i<qntCadastros;i++){
+		listaSegue[i] = listaSegue[i+1];
+		listaSeguido[i] = listaSeguido[i+1];
+	}		
+	
+	for(int i=1;i<qntCadastros;i++){
+		printf("\n\t%d/%d\n",i,qntCadastros-1);
+		if(strcmp(listaSegue[i].ultimo->user.nome,"") != 0){
+			printf("\n1");
+			lstAux=listaSegue[i];
+			printf("\n\t2");
+			usuariosAux = vetorUsuarios[existe];
+			printf("\n\t\t3");
+			printf("Remover o usuario: %s",usuariosAux.nome);
+		//	removeLista(usuariosAux,&lstAux);
+			printf("\n\t\t\t4");
+			listaSegue[i] = lstAux;
+			printf("\n\t\t\t\t5");
+		}
+		
+	}
 
 //---------------------------- Comeco Removendo da lista ------------------
 

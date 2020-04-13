@@ -192,7 +192,7 @@ main(){
 				}
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------	
 				
-				removerUsuario(existe,vetorUsuarios,matrizUsuarios,ptrSegue,ptrSeguido);/* Colocar explicacao */
+				removerUsuario(existe,vetorUsuarios,matrizUsuarios,ptrSegue,ptrSeguido,listaSegue,listaSeguido);/* Colocar explicacao */
 				system("pause");
 
 			//---------------------------------- Fim removendo um usuário -----------------------------------------------------------			
