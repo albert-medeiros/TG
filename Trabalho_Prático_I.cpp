@@ -224,7 +224,7 @@ main(){
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------	
 				
 				removerRelacao(existe,existe1,vetorUsuarios,matrizUsuarios,ptrSegue,ptrSeguido,listaSegue,listaSeguido);/* Colocar explicacao */				
-				
+				system("pause");
 				//---------------------------------- Fim removendo uma relacao -----------------------------------------------------------
 			break;
 			

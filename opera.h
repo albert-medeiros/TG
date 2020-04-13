@@ -323,6 +323,13 @@ void imprimeLista(TipoLista list){
 	
 }
 
+void FLVazia(TipoLista *lista){
+	lista->primeiro = ALOCA1;
+	lista->ultimo = lista->primeiro ;
+	lista->primeiro->prox = NULL;
+}
+
+
 
 void insereLista(TipoUsuario user, TipoLista *Lista){
 	Lista->ultimo->prox = ALOCA1;
@@ -332,32 +339,58 @@ void insereLista(TipoUsuario user, TipoLista *Lista){
 }
 
 void removeLista(TipoUsuario user, TipoLista *list){
-	system("pause");
-//	Lista->ultimo->prox = ALOCA1;
-//	Lista->ultimo = Lista->ultimo->prox;
-//	Lista->ultimo->user = user;
-//	Lista->ultimo->prox = NULL;
-	TLista *aux;
-	TipoLista *listaAux = list;
-	aux = list->primeiro;
-	printf("entrou");
+
+	TLista *auxComeco,*auxFim,*posicao1,*posicao2;
+	TLista vetorLista[tam];
+	TipoLista *listaAux = list,listaFinal;
+	usuario usuariosAux;
+	TipoLista lstAux, lstAux1;
 	
-	//imprimeLista(listaAux);
+	auxComeco = list->primeiro;
+	auxFim = list->ultimo;
+	int cont=1,posicaoRemover,i=0;
 	
-	printf("\n\n\n%s com %s",list->primeiro->prox->prox->user.nome,user.nome);
-	while(list->primeiro != list->ultimo){
-		
-		
-		if(strcmp(list->primeiro->prox->prox->user.nome,user.nome) == 0){
-//			aux->prox = aux->prox->prox;
-//			list->primeiro->prox = aux;			
-			break;
-		}
-		list->primeiro->prox  = list->primeiro->prox->prox;
+
+	if(auxComeco->prox == auxFim){ //se só tem um usuario seguindo ou sendo seguido ele zera a lista novamente, o ultimo e o primero apontam pro mesmo lugar
+		list->ultimo = list->primeiro;
+		list->primeiro->prox = NULL;
 	}
+
+	else if(strcmp(auxComeco->prox->user.nome,user.nome) == 0){
+		list->primeiro->prox=list->primeiro->prox->prox;
+	}
+
+	else{ //se não for o primeiro nem o ultimo entra aqui 
 	
-	printf("MANO AAAAAAAAAAAAAAAAAAAa");
-	system("pause");
+		FLVazia(&listaFinal);
+		while(auxComeco!=NULL){//strcmp(auxComeco->prox->user.nome,list->ultimo->user.nome)!=0){
+			
+			vetorLista[i].prox = auxComeco->prox->prox;
+			vetorLista[i].user = auxComeco->prox->user;
+						
+			if(strcmp(auxComeco->prox->user.nome,user.nome)==0){
+				posicaoRemover=cont;
+			}
+			
+			if(strcmp(auxComeco->prox->user.nome,listaAux->ultimo->user.nome)==0){
+				break;
+			}
+			
+			cont= cont+1;
+
+			auxComeco->prox = auxComeco->prox->prox;			
+			i++;
+		}
+
+		
+		for(int i=0;i<cont;i++){
+			usuariosAux = vetorLista[i].user;
+			if(i != posicaoRemover-1){
+				insereLista(usuariosAux,&listaFinal);	
+			}
+		}
+		list->primeiro = listaFinal.primeiro;			
+	}
 
 }
 
@@ -375,11 +408,6 @@ void imprimeLista1(TipoLista list,usuario user){
 	}
 }
 
-void FLVazia(TipoLista *lista){
-	lista->primeiro = ALOCA1;
-	lista->ultimo = lista->primeiro ;
-	lista->primeiro->prox = NULL;
-}
 
 
 void inicializaGrafos(usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam], TNo **ptr , TNo **ptrSeguido , TipoLista listaSegue[tam] , TipoLista listaSeguido[tam]){ 
@@ -649,7 +677,7 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 			printf("\n\n\n -------------------- lista de adjacencias ----------------------- \n\n");
 			printf("\n\tO usuario Segue:\n");
 			lstAux = listaSegue[existe];
-			if(lstAux.primeiro != NULL){
+			if(lstAux.primeiro->prox != NULL){
 				imprimeLista(lstAux);
 			}
 			else{
@@ -658,11 +686,11 @@ ii.no caso da representação por lista com adjacências em AVL, fornecer ao usuári
 			
 			printf("\n\tO usuario eh seguido:\n");
 			lstAux1 = listaSeguido[existe];
-			if(lstAux1.primeiro != NULL){
+			if(lstAux1.primeiro->prox != NULL){
 				imprimeLista(lstAux1);
 			}
 			else{
-				printf("\t\t\t O usuario nao segue ninguem!\n");
+				printf("\t\t\t O usuario nao eh seguido por ninguem!\n");
 			}
 			
 			printf("\n\n -------------------- lista de adjacencias ----------------------- \n\n");
@@ -733,7 +761,7 @@ void listarSeguidoresVelhos(int existe,usuario vetorUsuarios[tam],int matrizUsua
 	printf("\n\n\n -------------------- lista de adjacencias ----------------------- \n\n");
 	printf("\n\t%s com %d ano(s) segue:\n\n", vetorUsuarios[existe].nome, vetorUsuarios[existe].idade);
 	lstAux=listaSegue[existe];
-	if(lstAux.primeiro != NULL){
+	if(lstAux.primeiro->prox!= NULL){
 		imprimeLista1(lstAux,vetorUsuarios[existe]);	
 	}
 	else{
@@ -821,7 +849,7 @@ ii. caso a relação não esteja inserida deve-se oferecer essa opção ao usuário do
 	}
 }
 
-void removerUsuario(int existe, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido){
+void removerUsuario(int existe, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido,,TipoLista listaSegue[tam],TipoLista listaSeguido[tam]){
 /* 
 i. remove um usuário previamente cadastrado na rede social, inclusive, com todas as suas relações; 
 ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
@@ -829,6 +857,8 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 	
 	int confirmacao=0,vzs;
 	char aux[20];
+	TipoLista lstAux, lstAux1;
+	usuario usuariosAux;
 	TNo *ptrAux;
 	
 	printf("\n\t VOCE REALMENTE DESEJA REMOVER O USUARIO %s DA REDE? 1-sim 2-nao\n", vetorUsuarios[existe].nome);
@@ -882,7 +912,13 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 		ptrSeguido[i]=ptrAux;
 	}
 	
-//---------------------------- Fim Removendo da arvore ------------------				
+//---------------------------- Fim Removendo da arvore ------------------	
+
+//---------------------------- Comeco Removendo da lista ------------------			
+
+
+
+//---------------------------- Comeco Removendo da lista ------------------
 
 
 
@@ -926,16 +962,14 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 		ptrSeguido[existe1]=ptrAux;
 		
 		
-		lstAux=listaSegue[existe].primeiro;
+		lstAux=listaSegue[existe];
 		usuariosAux = vetorUsuarios[existe1];
 		removeLista(usuariosAux,&lstAux);
 		listaSegue[existe] = lstAux;
-		printf("\n\n\n\t\t\t Terminou a primeira");
+		
 		
 		lstAux=listaSeguido[existe1];
 		usuariosAux = vetorUsuarios[existe];
-		
-		
 		removeLista(usuariosAux,&lstAux);
 		listaSeguido[existe1] = lstAux;
 		
