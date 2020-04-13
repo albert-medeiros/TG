@@ -313,28 +313,6 @@ void pesquisa(TNo *ptr,usuario user){
 	
 //-----------------------------------------------------------------------------------------------------------------> Fim Funcoes usadas exclusivamenetes na Arvore AVL
 
-
-//void insereLista(TLista *lista,TipoUsuario user){
-//	lista->
-//
-//}
-void insereLista(TipoUsuario user, TipoLista *Lista){
-	Lista->ultimo->prox = ALOCA1;
-	Lista->ultimo = Lista->ultimo->prox;
-	Lista->ultimo->user = user;
-	Lista->ultimo->prox = NULL;
-}
-//
-//void imprimeLista(TLista *lista){
-//	TLista *Aux;
-//	Aux = lista->primeiro;
-//	while (Aux != NULL){
-//		printf("\t\t %s \n", Aux->ultimo->user.nome);
-//		Aux = Aux->prox;
-//	}
-//	
-//}
-
 void imprimeLista(TipoLista list){
 	TLista *Aux;
 	Aux = list.primeiro->prox;
@@ -345,12 +323,53 @@ void imprimeLista(TipoLista list){
 	
 }
 
+
+void insereLista(TipoUsuario user, TipoLista *Lista){
+	Lista->ultimo->prox = ALOCA1;
+	Lista->ultimo = Lista->ultimo->prox;
+	Lista->ultimo->user = user;
+	Lista->ultimo->prox = NULL;
+}
+
+void removeLista(TipoUsuario user, TipoLista *list){
+	system("pause");
+//	Lista->ultimo->prox = ALOCA1;
+//	Lista->ultimo = Lista->ultimo->prox;
+//	Lista->ultimo->user = user;
+//	Lista->ultimo->prox = NULL;
+	TLista *aux;
+	TipoLista *listaAux = list;
+	aux = list->primeiro;
+	printf("entrou");
+	
+	//imprimeLista(listaAux);
+	
+	printf("\n\n\n%s com %s",list->primeiro->prox->prox->user.nome,user.nome);
+	while(list->primeiro != list->ultimo){
+		
+		
+		if(strcmp(list->primeiro->prox->prox->user.nome,user.nome) == 0){
+//			aux->prox = aux->prox->prox;
+//			list->primeiro->prox = aux;			
+			break;
+		}
+		list->primeiro->prox  = list->primeiro->prox->prox;
+	}
+	
+	printf("MANO AAAAAAAAAAAAAAAAAAAa");
+	system("pause");
+
+}
+
+
+
+
 void imprimeLista1(TipoLista list,usuario user){
 	TLista *Aux;
 	Aux = list.primeiro->prox;
 	while (Aux != NULL){
 		if(Aux->user.idade>user.idade){
-			printf("\t\t %s - %d anos\n", vetorUsuarios[i].nome, vetorUsuarios[i].idade);
+			printf("\t\t %s - %d anos\n", Aux->user.nome, Aux->user.idade);
 		}	
 		Aux = Aux->prox;
 	}
@@ -882,24 +901,22 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 
 }
 
-void removerRelacao(int existe,int existe1, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido){
+void removerRelacao(int existe,int existe1, usuario vetorUsuarios[tam], int matrizUsuarios[tam][tam],TNo **ptr,TNo **ptrSeguido,TipoLista listaSegue[tam],TipoLista listaSeguido[tam]){
 /*
 i. remove uma relação previamente cadastrada na rede social; 
 ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja inserido, exibir uma mensagem de erro.
 */	
 	TNo *ptrAux;
+	TipoLista lstAux, lstAux1;
+	usuario usuariosAux;
+	
 //-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios			
 	if(matrizUsuarios[existe][existe1] == 0){
 		printf("\n\n\tO usuario %s ja nao seguia o usuario %s", vetorUsuarios[existe].nome, vetorUsuarios[existe1].nome);
 	}
 	else if(matrizUsuarios[existe][existe1] == 1){
 		matrizUsuarios[existe][existe1] = 0;
-	}
-//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
-
-
-//	printf("removendo essa relacao aqui oh %s -> %s",vetorUsuarios[existe],vetorUsuarios[existe1]);
-
+		
 		ptrAux = ptr[existe];
 		retiraAVL(&ptrAux,vetorUsuarios[existe1]);
 		ptr[existe]=ptrAux;
@@ -907,7 +924,26 @@ ii. caso algum elemento da relação a ser removida (vértice ou aresta) não esteja
 		ptrAux = ptrSeguido[existe1];
 		retiraAVL(&ptrAux,vetorUsuarios[existe]);
 		ptrSeguido[existe1]=ptrAux;
+		
+		
+		lstAux=listaSegue[existe].primeiro;
+		usuariosAux = vetorUsuarios[existe1];
+		removeLista(usuariosAux,&lstAux);
+		listaSegue[existe] = lstAux;
+		printf("\n\n\n\t\t\t Terminou a primeira");
+		
+		lstAux=listaSeguido[existe1];
+		usuariosAux = vetorUsuarios[existe];
+		
+		
+		removeLista(usuariosAux,&lstAux);
+		listaSeguido[existe1] = lstAux;
+		
+	}
+//-----------------------------------------------------------------------------------------------------------------> Matriz de pessos/vetor de usuarios		
 
+
+//	printf("removendo essa relacao aqui oh %s -> %s",vetorUsuarios[existe],vetorUsuarios[existe1]);
 }
 
 void printaTodosUsuarios(usuario vetorUsuarios[tam]){
@@ -939,7 +975,7 @@ retornando a posicao que ele se encotra no vetor responsavel por armazenar os ca
 	}
 	
 	if(posicao == 0){ //caso não encontrar
-		printf("O nome digitado nao esta cadastrado na rede. Digite novamente!\n");
+		printf("\n\nO nome digitado nao esta cadastrado na rede. Digite novamente!\n\n");
 		system("pause");
 		return 0;
 	}
