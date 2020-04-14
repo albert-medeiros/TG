@@ -521,44 +521,50 @@ vi. no caso da representação na lista com adjacências em AVL, ao se inserir uma 
 			printf("\n\t - somente um usuário encontrado - ");
 			break;
 		}
-//---------------------------- Fim da verificacao se o usuario ja foi inserido no vetor ------------------					
+//---------------------------- Fim da verificacao se o usuario ja foi inserido no vetor ------------------	
 
-//---------------------------- Comeco da insercao na matriz ------------------			
-
-		matrizUsuarios[linha][coluna] = 1;		
-		
-//---------------------------- Fim da insercao na matriz ------------------						
-
-//---------------------------- Comeco da insercao na arvore AVL ------------------	
-/* estava dando problema quando eu tentava mandar inserir ja no vetor direto, entao, foi criado auxiliares para a posicao que era da arvore 
-e para os dados que vao ser inseridos pois desta forma as alteracoes que seriam feitas na funcao sao menores e funcionaram (hihihihihi), portanto, 
-apos enviar a posicao do vetor de arvore recebe de volta os dados atualizados (assim como foi feito em outras partes como para a exclusao) */
-		
-		ptrAux = ptr[linha];
-		usuariosAux = vetorUsuarios[coluna];		
-		insereAVL(&ptrAux,usuariosAux);
-		ptr[linha] = ptrAux;
-		
-		ptrAux1 = ptrSeguido[coluna];
-		usuariosAux = vetorUsuarios[linha];		
-		insereAVL(&ptrAux1,usuariosAux);
-		ptrSeguido[coluna] = ptrAux1;
-		
-//---------------------------- Fim da insercao na arvore AVL ------------------	
-
-//---------------------------- Comeco da insercao na lista ------------------	
-
-		lstAux=listaSegue[linha];
-		usuariosAux = vetorUsuarios[coluna];
-		insereLista(usuariosAux,&lstAux);
-		listaSegue[linha] = lstAux;
-		
-		lstAux=listaSeguido[coluna];
-		usuariosAux = vetorUsuarios[linha];
-		insereLista(usuariosAux,&lstAux);
-		listaSeguido[coluna] = lstAux;
-
-//---------------------------- Fim da insercao na lista ------------------	
+	if(matrizUsuarios[linha][coluna] == 0){ //faz a verificacao somente na matriz pois nas outras estruturas resultariam a mesma coisa
+					
+	//---------------------------- Comeco da insercao na matriz ------------------			
+	
+			matrizUsuarios[linha][coluna] = 1;		
+			
+	//---------------------------- Fim da insercao na matriz ------------------						
+	
+	//---------------------------- Comeco da insercao na arvore AVL ------------------	
+	/* estava dando problema quando eu tentava mandar inserir ja no vetor direto, entao, foi criado auxiliares para a posicao que era da arvore 
+	e para os dados que vao ser inseridos pois desta forma as alteracoes que seriam feitas na funcao sao menores e funcionaram (hihihihihi), portanto, 
+	apos enviar a posicao do vetor de arvore recebe de volta os dados atualizados (assim como foi feito em outras partes como para a exclusao) */
+			
+			ptrAux = ptr[linha];
+			usuariosAux = vetorUsuarios[coluna];		
+			insereAVL(&ptrAux,usuariosAux);
+			ptr[linha] = ptrAux;
+			
+			ptrAux1 = ptrSeguido[coluna];
+			usuariosAux = vetorUsuarios[linha];		
+			insereAVL(&ptrAux1,usuariosAux);
+			ptrSeguido[coluna] = ptrAux1;
+			
+	//---------------------------- Fim da insercao na arvore AVL ------------------	
+	
+	//---------------------------- Comeco da insercao na lista ------------------	
+	
+			lstAux=listaSegue[linha];
+			usuariosAux = vetorUsuarios[coluna];
+			insereLista(usuariosAux,&lstAux);
+			listaSegue[linha] = lstAux;
+			
+			lstAux=listaSeguido[coluna];
+			usuariosAux = vetorUsuarios[linha];
+			insereLista(usuariosAux,&lstAux);
+			listaSeguido[coluna] = lstAux;
+	
+	//---------------------------- Fim da insercao na lista ------------------
+	}
+	else{
+		printf("\n\t - Relacao ja inserida - \n");
+	}
 		cont=0; //zera pra nova verificacao se ja foi inserido		
 	}
 }
@@ -824,7 +830,7 @@ ii. caso o usuário não esteja cadastrado, exibir uma mensagem de erro.
 	
 	if(confirmacao == 1){
 
-		//strcpy(aux,vetorUsuarios[existe].nome);
+		strcpy(aux,vetorUsuarios[existe].nome);
 
 
 //---------------------------- Comeco Removendo da lista ------------------	
