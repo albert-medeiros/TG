@@ -166,7 +166,7 @@ main(){
 				}
 				// ------------------ Fim da verificacao se o nome a ser pesquisado exite ---------------------		
 							
-				atualizarRelacao(existe, existe1,vetorUsuarios,matrizUsuarios,ptrSegue,ptrSeguido);	/* Colocar explicacao */		
+				atualizarRelacao(existe, existe1,vetorUsuarios,matrizUsuarios,ptrSegue,ptrSeguido,listaSegue,listaSeguido);	/* Colocar explicacao */		
 					
 			//---------------------------------- Fim Atualizando relacoes -----------------------------------------------------------				
 			break;
